@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<project basedir="." default="build_and_fix">
+
+  <target name="build_and_fix" depends="compile, fix_srcmap"/>
+
+  <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
+      classpath="/Users/nick/closure/compiler.jar"/>
+
+  <target name="compile">
+
+    <path id="src.js.fileset">
+      <fileset dir="src"><include name="*.js" /></fileset>
+      <fileset dir="src/gl"><include name="*.js" /></fileset>
+      <fileset dir="src/util"><include name="*.js" /></fileset>
+      <fileset dir="src/input"><include name="*.js" /></fileset>
+    </path>
+
+    <jscomp
+        sourceMapOutputFile="./rootworld.js.map"
+        languageIn="ECMASCRIPT5"
+        compilationLevel="simple"
+        forceRecompile="true"
+        debug="false"
+        warning="verbose"
+        output="rootworld.js">
+
+      <externs dir="${basedir}/externs">
+        <file name="gl-matrix.js"/>
+      </externs>
+
+      <path refid="src.js.fileset" />
+    </jscomp>
+  </target>
+
+  <target name="fix_srcmap">
+    <exec executable="perl">
+        <arg value="-pi"/>
+        <arg value="-e"/>
+        <arg value="
+          s/\/Library\/WebServer\/rootworld\///g;
+        "/>
+        <arg value="rootworld.js.map"/>
+    </exec>
+  </target>
+
+</project>
