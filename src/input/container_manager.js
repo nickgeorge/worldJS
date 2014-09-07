@@ -1,6 +1,6 @@
 goog.provide('ContainerManager');
 
-/** @constructor */
+/** @constructor @struct */
 ContainerManager = function(container) {
   this.container = container;
   this.keyMap = {};

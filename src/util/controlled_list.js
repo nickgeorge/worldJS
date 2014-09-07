@@ -1,6 +1,6 @@
 goog.provide('ControlledList');
 
-/** @constructor */
+/** @constructor @struct */
 ControlledList = function() {
   this.elements = [];
   this.elementsToAdd = [];
@@ -38,6 +38,11 @@ ControlledList.prototype.update = function() {
   this.elementsToRemove.length = 0;
 };
 
-ControlledList.prototype.forEach = function(f, opt_context) {
-  util.array.forEach(this.elements, f, opt_context);
+
+/**
+ * @param {Function} f
+ * @param {*=} opt_ctx
+ */
+ControlledList.prototype.forEach = function(f, opt_ctx) {
+  util.array.forEach(this.elements, f, opt_ctx);
 };

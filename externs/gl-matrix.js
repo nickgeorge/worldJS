@@ -23,7 +23,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 /**
  * @class Common utilities
- * @name glMatrix
  */
 var glMatrix = {};
 
@@ -43,7 +42,6 @@ glMatrix.toRadian = function(angle){};
 
 /**
  * @class 2 Dimensional Vector
- * @name vec2
  * @typedef {Array.<number>}
  */
 var vec2 = {};
@@ -373,10 +371,8 @@ vec2.str = function (a) {};
 
 /**
  * @class 3 Dimensional Vector
- * @name vec3
  * @typedef {Array.<number>}
  */
-
 var vec3 = {};
 
 /**
@@ -723,7 +719,6 @@ vec3.str = function (a) {};
 
 /**
  * @class 4 Dimensional Vector
- * @name vec4
  * @typedef {Array.<number>}
  */
 
@@ -1024,7 +1019,6 @@ vec4.str = function (a) {};
 
 /**
  * @class 2x2 Matrix
- * @name mat2
  * @typedef {Array.<number>}
  */
 
@@ -1161,7 +1155,6 @@ mat2.LDU = function (L, D, U, a) {};
 
 /**
  * @class 2x3 Matrix
- * @name mat2d
  *
  * @description
  * A mat2d contains six elements defined as:
@@ -1295,7 +1288,6 @@ mat2d.frob = function (a) {};
 
 /**
  * @class 3x3 Matrix
- * @name mat3
  * @typedef {Array.<number>}
  */
 
@@ -1471,7 +1463,6 @@ mat3.frob = function (a) {};
 
 /**
  * @class 4x4 Matrix
- * @name mat4
  * @typedef {Array.<number>}
  */
 
@@ -1709,7 +1700,6 @@ mat4.frob = function (a) {};
 
 /**
  * @class Quaternion
- * @name quat
  * @typedef {Array.<number>}
  */
 

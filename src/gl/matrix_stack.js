@@ -1,7 +1,7 @@
 goog.provide('MatrixStack');
 
 
-/** @constructor */
+/** @constructor @struct */
 MatrixStack = function() {
   this.stack = [];
   this.nextIndex = 0;

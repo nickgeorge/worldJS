@@ -1,6 +1,6 @@
 goog.provide('FullWindowResizer');
 
-/** @constructor */
+/** @constructor @struct */
 FullWindowResizer = function(gl, glCanvas, hud, hudCanvas) {
   this.gl = gl;
   this.glCanvas = glCanvas;

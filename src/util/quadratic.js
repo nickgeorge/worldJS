@@ -1,7 +1,7 @@
 goog.provide('Quadratic');
 
 
-/** @constructor */
+/** @constructor @struct */
 Quadratic = function(a, b, c) {
   this.a = a;
   this.b = b;

@@ -4,15 +4,20 @@
   <target name="build_and_fix" depends="compile, fix_srcmap"/>
 
   <taskdef name="jscomp" classname="com.google.javascript.jscomp.ant.CompileTask"
-      classpath="/Users/nick/closure/compiler.jar"/>
+      classpath="/Users/nick/git/closure-compiler/build/compiler.jar"/>
 
   <target name="compile">
 
     <path id="src.js.fileset">
       <fileset dir="src"><include name="*.js" /></fileset>
+      <fileset dir="src/camera"><include name="*.js" /></fileset>
+      <fileset dir="src/effects"><include name="*.js" /></fileset>
       <fileset dir="src/gl"><include name="*.js" /></fileset>
-      <fileset dir="src/util"><include name="*.js" /></fileset>
       <fileset dir="src/input"><include name="*.js" /></fileset>
+      <fileset dir="src/light"><include name="*.js" /></fileset>
+      <fileset dir="src/media"><include name="*.js" /></fileset>
+      <fileset dir="src/population"><include name="*.js" /></fileset>
+      <fileset dir="src/util"><include name="*.js" /></fileset>
     </path>
 
     <jscomp
@@ -26,6 +31,7 @@
 
       <externs dir="${basedir}/externs">
         <file name="gl-matrix.js"/>
+        <file name="audio.js"/>
       </externs>
 
       <path refid="src.js.fileset" />

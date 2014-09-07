@@ -8,7 +8,7 @@ goog.provide('Widget');
 goog.require('util');
 goog.require('Animator');
 
-/** @constructor */
+/** @constructor @struct */
 HUD = function(canvas) {
   this.canvas = canvas;
   this.context = canvas.getContext('2d');
@@ -43,14 +43,14 @@ HUD.prototype.clear = function() {
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 };
 
-/** @constructor */
-Widget = function(x, y, font, fillStyle) {
+/** @constructor @struct */
+Widget = function(x, y) {
   this.context = null;
   this.x = x;
   this.y = y;
   this.position = null;
-  this.font = font;
-  this.fillStyle = fillStyle;
+  this.font = null;
+  this.fillStyle = null;
 };
 
 Widget.prototype.resize = function() {
@@ -60,28 +60,41 @@ Widget.prototype.resize = function() {
   ];
 };
 
-Widget.prototype.setFont = function(opt_font, opt_fillStyle) {
-  this.context.font = opt_font || this.font;
-  this.context.fillStyle = opt_fillStyle || this.fillStyle;
+
+Widget.prototype.setFont = function(font) {
+  this.context.font = font;
 };
 
-/** @constructor */
+
+Widget.prototype.setFillStyle = function(fillStyle) {
+  this.context.fillStyle = fillStyle;
+};
+
+
+/**
+ * @constructor
+ * @extends {Widget}
+ */
 Fraps = function(x, y) {
-  goog.base(this, x, y, 'bold 16px courier');
+  goog.base(this, x, y);
 };
 goog.inherits(Fraps, Widget);
 
 Fraps.prototype.render = function() {
   var animator = Animator.getInstance();
   var fraps = Animator.getInstance().getRollingAverageFramerate();
-  this.setFont(null, fraps < 45 ? '#F00' : '#0F0');
+  this.setFillStyle(fraps < 45 ? '#F00' : '#0F0');
+  this.setFont('bold 16px courier');
   this.context.fillText('FPS: ' + fraps,
       this.position[0], this.position[1]);
 };
 
-/** @constructor */
+/**
+ * @constructor
+ * @extends {Widget}
+ */
 Crosshair = function() {
-  goog.base(this);
+  goog.base(this, 0, 0);
 };
 goog.inherits(Crosshair, Widget);
 
@@ -107,9 +120,12 @@ Crosshair.prototype.render = function() {
   this.context.translate(-this.position[0], -this.position[1]);
 };
 
-/** @constructor */
+/**
+ * @constructor
+ * @extends {Widget}
+ */
 Logger = function(x, y) {
-  goog.base(this, x, y, 'bold 20px courier', '#0F0');
+  goog.base(this, x, y);
 
   this.activeLines = 0;
   this.maxLinesToShow = 3;
@@ -130,12 +146,12 @@ Logger.prototype.fade = function() {
 
 Logger.prototype.render = function() {
   if (!this.activeLines) return;
-  this.setFont();
   var length = this.lines.length;
-
+  this.setFillStyle('#AAA');
+  this.setFont('bold 20px courier');
   this.context.fillText(this.lines[length - 1],
       this.position[0], this.position[1]);
-  this.setFont('16px courier', '#AAA');
+  this.setFont('16px courier');
   for (var i = 1; i < this.activeLines && i < this.maxLinesToShow; i++) {
     var line = this.lines[length - i - 1];
     if (!line) return;
@@ -144,16 +160,21 @@ Logger.prototype.render = function() {
   }
 };
 
-/** @constructor */
+
+/**
+ * @constructor
+ * @extends {Widget}
+ */
 StartButton = function() {
-  goog.base(this, 0, 0, '56px wolfenstein', '#FFF')
+  goog.base(this, 0, 0)
 };
 goog.inherits(StartButton, Widget);
 
 
 StartButton.prototype.render = function() {
   if (!Animator.getInstance().isPaused()) return;
-  this.setFont();
+  this.setFont('56px wolfenstein');
+  this.setFillStyle('#FFF');
   this.context.fillText('Klicken f' + String.fromCharCode(252) + 'r St' + String.fromCharCode(228) + 'rten',
       this.context.canvas.width/2 - 200, this.context.canvas.height/2 - 25);
 };

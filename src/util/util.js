@@ -55,6 +55,26 @@ goog.base = function(me, opt_methodName, var_args) {
         'to a method of a different name');
   }
 };
+
+
+/**
+ * Reference to the global context.  In most cases this will be 'window'.
+ */
+goog.global = this;
+
+
+/**
+ * Allow for aliasing within scope functions.  This function exists for
+ * uncompiled code - in compiled code the calls will be inlined and the aliases
+ * applied.  In uncompiled code the function is simply run since the aliases as
+ * written are valid JavaScript.
+ * @param {function()} fn Function to call.  This function can contain aliases
+ *     to namespaces (e.g. "var dom = goog.dom") or classes
+ *     (e.g. "var Timer = goog.Timer").
+ */
+goog.scope = function(fn) {
+  fn.call(goog.global);
+};
 /////////////////////////////////////////
 
 goog.provide('util');
@@ -83,10 +103,11 @@ util.partial = function(fn, var_args) {
 
 
 /**
- * @param {Function} fn
- * @param {*} thisObj
+ * @param {?function(T, ...)} fn
+ * @param {T} thisObj
  * @param {...*} var_args
- * @return {Function}
+ * @return {!Function}
+ * @template T
  */
 util.bind = function(fn, thisObj, var_args) {
   var args = Array.prototype.slice.call(arguments, 2);
@@ -144,10 +165,6 @@ util.assertEquals = function(a, b, message) {
   if (a != b) {
     throw new Error(message);
   }
-};
-
-util.sqr = function(x) {
-  return x*x;
 };
 
 /*********************/
@@ -362,7 +379,6 @@ util.array.pluck = function(arr, key) {
   });
   return pluckedArray;
 };
-
 
 
 /**

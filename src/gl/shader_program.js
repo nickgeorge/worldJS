@@ -2,7 +2,7 @@ goog.provide('ShaderProgram');
 
 
 /** @constructor */
-ShaderProgram = function() {}
+ShaderProgram = function(){};
 
 ShaderProgram.USE_TEXTURE_DEFAULT = false;
 ShaderProgram.USE_LIGHTING_DEFAULT = true;
@@ -63,7 +63,6 @@ ShaderProgram.createShaderProgram = function(gl, vertexShader, fragmentShader) {
   shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, 'aTextureCoord');
 
   gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-  gl.enableVertexAttribArray(shaderProgram.vertexColorAttribute);
   gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
   gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
   gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);

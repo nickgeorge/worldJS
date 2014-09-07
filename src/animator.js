@@ -9,7 +9,10 @@ goog.require('Framerate');
  */
 Animator = function(world, hud, gl) {
   this.world = world;
+
+  /** @type {HUD} */
   this.hud = hud;
+
   this.gl = gl;
   this.framerate = new Framerate();
   this.paused = false;
@@ -38,11 +41,13 @@ Animator.prototype.start = function() {
 
 Animator.prototype.setPaused = function(paused) {
   this.paused = paused;
+  this.world.onPauseChanged(this.paused);
 };
 
 
 Animator.prototype.togglePause = function() {
   this.paused = !this.paused;
+  this.world.onPauseChanged(this.paused);
 };
 
 

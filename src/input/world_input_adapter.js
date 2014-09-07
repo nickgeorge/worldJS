@@ -1,7 +1,7 @@
 goog.provide('WorldInputAdapter');
 goog.require('Animator');
 
-/** @constructor */
+/** @constructor @struct */
 WorldInputAdapter = function() {
   this.onMouseMove = util.fn.noOp;
   this.onKey = util.fn.noOp;
