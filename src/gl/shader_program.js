@@ -33,10 +33,10 @@ ShaderProgram.createShader = function(gl, shaderString, type) {
 
 ShaderProgram.createProgramWithDefaultShaders = function(gl) {
   var fragmentShader = ShaderProgram.loadExternalShader(gl,
-      ShaderProgram.defaultDomain + '/rootworld/shaders/fragment.shader',
+      ShaderProgram.defaultDomain + '/worldJS/shaders/fragment.shader',
       gl.FRAGMENT_SHADER);
   var vertexShader = ShaderProgram.loadExternalShader(gl,
-      ShaderProgram.defaultDomain + '/rootworld/shaders/vertex.shader',
+      ShaderProgram.defaultDomain + '/worldJS/shaders/vertex.shader',
       gl.VERTEX_SHADER);
   return ShaderProgram.createShaderProgram(gl,
       vertexShader,
