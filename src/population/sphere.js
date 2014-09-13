@@ -9,7 +9,7 @@ goog.require('LeafThing');
  * @extends {LeafThing}
  * @struct
  */
-// TODO: Cache position buffers!
+// TODO: weird buffer caching!
 Sphere = function(message) {
   message.leaf = true;
   message.drawType = LeafThing.DrawType.ELEMENTS;
@@ -88,8 +88,8 @@ Sphere.prototype.finalize = function() {
   var vertexData = [];
   var normalData = [];
   var indexData = [];
-
   var textureCoordData = [];
+
   for (var latitude = 0; latitude <= this.latitudeCount; latitude++) {
     var theta = latitude * Math.PI / this.latitudeCount;
     var sinTheta = Math.sin(theta);
@@ -105,7 +105,6 @@ Sphere.prototype.finalize = function() {
       var u = 1 - (longitude / this.longitudeCount);
       var v = 1 - (latitude / this.latitudeCount);
 
-      // normalize these
       normalData.push(x);
       normalData.push(y);
       normalData.push(z);

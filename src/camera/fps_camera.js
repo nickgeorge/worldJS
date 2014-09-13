@@ -1,5 +1,7 @@
 goog.provide('FpsCamera');
 
+goog.require('FpsAnchor');
+
 
 /**
  * @constructor
@@ -7,45 +9,35 @@ goog.provide('FpsCamera');
  * @struct
  */
 FpsCamera = function(message) {
+  /** @type {FpsAnchor} */
   this.anchor = null;
+
   this.objectCache = {
-    transform: {
-      viewOrientation: quat.create(),
-      conjugateViewOrientation: quat.create(),
-      anchorPosition: vec3.create(),
-      bobOffset: vec3.create(),
-      negatedAnchorPosition: vec3.create(),
-    }
+    viewOrientation: quat.create(),
+    conjugateViewOrientation: quat.create(),
+    anchorPosition: vec3.create(),
+    negatedAnchorPosition: vec3.create(),
   };
 };
 
 
 FpsCamera.prototype.transform = function() {
-  var cache = this.objectCache.transform;
+  var cache = this.objectCache;
 
   var viewOrientation = this.anchor.getViewOrientation(cache.viewOrientation)
   var conjugateViewOrientation = quat.conjugate(
       cache.conjugateViewOrientation,
       viewOrientation);
   Env.gl.rotateView(conjugateViewOrientation);
-  var position = vec3.copy(cache.anchorPosition,
-      this.anchor.position);
 
-  var bobOffset = vec3.set(cache.bobOffset,
-      0, Math.sin(-this.anchor.bobAge)/2, 0);
-  // Probably shld be up orientation.  Think about more
-  vec3.transformQuat(bobOffset,
-      bobOffset,
-      viewOrientation);
-
-  vec3.add(position, position, bobOffset);
+  var position = this.getPosition();
   Env.gl.translateView(vec3.negate(cache.negatedAnchorPosition, position));
   Env.gl.uniform3fv(Env.gl.getActiveProgram().eyeLocationUniform, position);
 };
 
 
 FpsCamera.prototype.getPosition = function() {
-  return this.anchor.position;
+  return this.anchor.getEyePosition(this.objectCache.anchorPosition);
 };
 
 FpsCamera.prototype.setAnchor = function(anchor) {

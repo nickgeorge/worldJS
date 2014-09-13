@@ -120,7 +120,6 @@ GL.prototype.setViewMatrixUniforms = function() {
 };
 
 GL.prototype.computeNormalMatrix = function() {
-  // TODO: figure out what's going on here
   mat3.fromMat4(this.normalMatrix,
       mat4.invert(this.invertedModelMatrix, this.modelMatrix));
   mat3.transpose(this.normalMatrix, this.normalMatrix);

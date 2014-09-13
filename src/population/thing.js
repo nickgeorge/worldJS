@@ -23,6 +23,7 @@ Thing = function(message) {
 
   this.velocityType = message.velocityType || Thing.defaultVelocityType;
 
+
   this.position = vec3.nullableClone(message.position);
   this.velocity = vec3.nullableClone(message.velocity);
   this.lastPosition = vec3.clone(this.position);
@@ -37,7 +38,6 @@ Thing = function(message) {
   this.effects = [];
   this.parent = null;
 
-  // TODO: these are mostly crap
   this.isRoot = message.isRoot || false;
   this.isStatic = message.isStatic || false;
   this.glommable = message.glommable !== false;
@@ -68,8 +68,8 @@ Thing.Message;
  * @enum
  */
 Thing.VelocityType = {
-  ABSOLUTE: 0,
-  RELATIVE: 1
+  ABSOLUTE: 1,
+  RELATIVE: 2
 };
 
 
@@ -114,7 +114,7 @@ Thing.prototype.advanceBasics = function(dt) {
           vec3.transformQuat(
               vec3.temp,
               this.velocity,
-              this.upOrientation), dt);
+              this.getMovementUp()), dt);
     } else {
       vec3.scaleAndAdd(this.position, this.position,
           this.velocity,
@@ -128,6 +128,21 @@ Thing.prototype.advanceBasics = function(dt) {
     }
   }
 };
+
+
+/**
+ * Gets the orientation in which velocity should be evaluated,
+ * for VelocityType.RELATIVE.
+ * Ignored for VelocityType.ABSOLUTE.
+ * @return {quat}
+ */
+Thing.prototype.getMovementUp = function() {
+  var result = quat.create();
+  return function(out) {
+    return quat.copy(result, this.upOrientation);
+  }
+}();
+
 
 
 Thing.prototype.setVelocity = function(v) {
@@ -340,9 +355,8 @@ Thing.prototype.distanceSquaredTo = function(other) {
 };
 
 
-Thing.prototype.computeDistanceSquaredToCamera = function() {
-  this.distanceSquaredToCamera = vec3.squaredDistance(this.position,
-      Env.world.getCamera().getPosition());
+Thing.prototype.computeDistanceSquaredToCamera = function(cameraPosition) {
+  this.distanceSquaredToCamera = this.distanceSquaredTo(cameraPosition);
 };
 
 

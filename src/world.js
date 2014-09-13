@@ -65,9 +65,10 @@ World.prototype.addEffect = function(effect) {
 
 World.prototype.draw = function() {
   if (this.sortBeforeDrawing) {
+    var cameraPosition = this.camera.getPosition();
     util.array.forEach(this.drawables.elements, function(thing) {
       if (thing.isDisposed) return;
-      thing.computeDistanceSquaredToCamera();
+      thing.computeDistanceSquaredToCamera(cameraPosition);
     });
 
     this.drawables.elements.sort(function(thingA, thingB) {
