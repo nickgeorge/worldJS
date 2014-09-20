@@ -43,7 +43,7 @@
         <arg value="-pi"/>
         <arg value="-e"/>
         <arg value="
-          s/\/Library\/WebServer\/rootworld\///g;
+          s/\/Library\/WebServer\/worldJS\///g;
         "/>
         <arg value="rootworld.js.map"/>
     </exec>

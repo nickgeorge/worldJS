@@ -144,6 +144,14 @@ Thing.prototype.getMovementUp = function() {
 }();
 
 
+Thing.prototype.getConjugateUp = function() {
+  var result = quat.create();
+  return function() {
+    return quat.conjugate(result, this.upOrientation);
+  }
+}();
+
+
 
 Thing.prototype.setVelocity = function(v) {
   vec3.copy(this.velocity, v);
@@ -152,7 +160,7 @@ Thing.prototype.setVelocity = function(v) {
 
 Thing.prototype.findThingEncounter = function(thing, threshold) {
   return this.findEncounter(
-    thing.lastPosition, thing.position, threshold);
+      thing.lastPosition, thing.position, threshold);
 };
 
 
@@ -181,8 +189,9 @@ Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold) {
 
 Thing.prototype.glom = function(thing, point) {
   if (this.glommable) {
-    Env.world.disposables.push(thing);
+    // Env.world.disposables.push(thing);
     this.addEffect(thing);
+    Env.world.projectiles.remove(thing);
     vec3.copy(thing.velocity, vec3.ZERO);
 
     vec3.copy(thing.position, point);
@@ -265,6 +274,20 @@ Thing.prototype.worldToLocalCoords = function(out, v, opt_w) {
   }
   return out;
 };
+
+Thing.prototype.fromUpOrientation = function() {
+  var result = vec3.create();
+  return function(a) {
+    return vec3.transformQuat(result, a, this.upOrientation);
+  }
+}();
+
+Thing.prototype.toUpOrientation = function() {
+  var result = vec3.create();
+  return function(a) {
+    return vec3.transformQuat(result, a, this.getConjugateUp());
+  }
+}();
 
 Thing.prototype.draw = function() {
   if (this.isDisposed) return;
@@ -356,7 +379,7 @@ Thing.prototype.distanceSquaredTo = function(other) {
 
 
 Thing.prototype.computeDistanceSquaredToCamera = function(cameraPosition) {
-  this.distanceSquaredToCamera = this.distanceSquaredTo(cameraPosition);
+  this.distanceSquaredToCamera = vec3.squaredDistance(this.position, cameraPosition);
 };
 
 

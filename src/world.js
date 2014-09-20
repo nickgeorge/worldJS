@@ -12,6 +12,8 @@ World = function() {
   this.camera = null;
   this.collisionManager = null;
 
+  this.age = 0;
+
   this.drawables = new ControlledList();
 
   this.things = new ControlledList();
@@ -21,7 +23,7 @@ World = function() {
 
   this.backgroundColor = [1, 1, 1, 1];
 
-  this.sortBeforeDrawing = false;
+  this.sortBeforeDrawing = true;
   this.paused = false;
 };
 
@@ -95,6 +97,7 @@ World.prototype.draw = function() {
 
 
 World.prototype.advance = function(dt) {
+  this.age += dt;
   this.updateLists();
 
   if (this.paused) return;

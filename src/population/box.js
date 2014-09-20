@@ -12,6 +12,7 @@ goog.require('LeafThing');
  */
 Box = function(message) {
   message.drawType = LeafThing.DrawType.ELEMENTS;
+  this.normalMultiplier = message.normalMultiplier || 1;
   goog.base(this, message);
   this.size = message.size;
   this.textureCountsByFace = message.textureCountsByFace || {};
@@ -49,6 +50,7 @@ Box.prototype.getOuterRadius = function() {
       this.size[0],
       this.size[1],
       this.size[2]);
+// return 0;
 };
 
 
@@ -136,20 +138,24 @@ Box.prototype.getIndexBuffer = function() {
 };
 
 
-Box.normalBuffer = null;
+Box.normalBufferCache = {};
 
 
 Box.prototype.getNormalBuffer = function() {
-  if (!Box.normalBuffer) {
+  if (!Box.normalBufferCache[this.normalMultiplier]) {
     var vertexNormals = [];
     Box.eachFace(function(faceName, faceIndex) {
       for (var i = 0; i < 4; i++) {
-        util.array.pushAll(vertexNormals, Box.FACE_NORMALS[faceName]);
+        for (var j = 0; j < Box.FACE_NORMALS[faceName].length; j++) {
+          vertexNormals.push(
+              this.normalMultiplier * Box.FACE_NORMALS[faceName][j]);
+        }
       }
-    });
-    Box.normalBuffer = Env.gl.generateBuffer(vertexNormals, 3);
+    }, this);
+    Box.normalBufferCache[this.normalMultiplier] =
+        Env.gl.generateBuffer(vertexNormals, 3);
   }
-  return Box.normalBuffer;
+  return Box.normalBufferCache[this.normalMultiplier];
 };
 
 
