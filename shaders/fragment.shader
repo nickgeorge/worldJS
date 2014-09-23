@@ -24,7 +24,7 @@ void main(void) {
   } else {
     vec3 relativeLightPosition = uPointLightingLocation - vPosition.xyz;
     vec3 lightDirection = normalize(relativeLightPosition);
-    vec3 normal = normalize(vTransformedNormal);
+    vec3 normal = vTransformedNormal;
     vec3 reflectionDirection = reflect(-lightDirection, normal);
 
     float directionalLightWeighting = max(0.0, dot(normal, lightDirection));
@@ -38,9 +38,9 @@ void main(void) {
     // Right now specular dropoff only factors light -> thing distance, not
     // thing -> eye.  Think about this some more.
     float distance = length(relativeLightPosition);
-    float distanceDropoff = 1.0;//1.0/(distance*distance/50625.0 + 1.0);
-    
-    lightWeighting = uAmbientColor + 
+    float distanceDropoff = 1.0 - distance*distance/100625.0;
+
+    lightWeighting = uAmbientColor +
         uPointLightingColor * specularLightWeighting * distanceDropoff +
         uPointLightingColor * directionalLightWeighting * distanceDropoff;
   }

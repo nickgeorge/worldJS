@@ -93,6 +93,8 @@ ShaderProgram.createShaderProgram = function(gl, vertexShader, fragmentShader) {
   shaderProgram.loadedNormalBuffer = null;
   shaderProgram.loadedIndexBuffer = null;
   shaderProgram.loadedPositionBuffer = null;
+  shaderProgram.loadedTextureBuffer = null;
+
   return shaderProgram;
 };
 

@@ -74,8 +74,14 @@ World.prototype.draw = function() {
     });
 
     this.drawables.elements.sort(function(thingA, thingB) {
-      return thingB.distanceSquaredToCamera -
-          thingA.distanceSquaredToCamera;
+      if (thingA.transluscent != thingB.transluscent) {
+        return thingA.transluscent ? 1 : -1;
+      }
+
+      return thingA.distanceSquaredToCamera -
+          thingB.distanceSquaredToCamera;
+      // return thingB.distanceSquaredToCamera -
+          // thingA.distanceSquaredToCamera;
     });
   }
 

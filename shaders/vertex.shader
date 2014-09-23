@@ -18,9 +18,9 @@ varying vec3 vEyeDirection;
 
 void main(void) {
   vPosition = uModelMatrix * vec4(uScale * aVertexPosition, 1.0);
-  
+
   gl_Position = uPerspectiveMatrix * uViewMatrix * vPosition;
   vTextureCoord = aTextureCoord;
-  vTransformedNormal = uNormalMatrix * aVertexNormal;
+  vTransformedNormal = normalize(uNormalMatrix * aVertexNormal);
   vEyeDirection = normalize(uEyeLocation - vPosition.xyz);
 }

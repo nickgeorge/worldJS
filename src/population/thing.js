@@ -12,6 +12,7 @@ goog.require('util');
  * @suppress {missingProperties}
  */
 Thing = function(message) {
+  this.id = null;
   this.upOrientation = quat.nullableClone(message.upOrientation);
   quat.rotateY(this.upOrientation, this.upOrientation, message.yaw || 0);
   quat.rotateX(this.upOrientation, this.upOrientation, message.pitch || 0);
@@ -41,6 +42,7 @@ Thing = function(message) {
   this.isRoot = message.isRoot || false;
   this.isStatic = message.isStatic || false;
   this.glommable = message.glommable !== false;
+  this.transluscent = false;
   this.name = message.name || null;
 
   this.isDisposed = false;
@@ -75,6 +77,12 @@ Thing.VelocityType = {
 
 /** @type {Thing.VelocityType} */
 Thing.defaultVelocityType = Thing.VelocityType.ABSOLUTE;
+
+
+Thing.prototype.setId = function(id) {
+  this.id = id;
+  return this;
+};
 
 
 Thing.prototype.advance = function(dt) {
@@ -150,12 +158,6 @@ Thing.prototype.getConjugateUp = function() {
     return quat.conjugate(result, this.upOrientation);
   }
 }();
-
-
-
-Thing.prototype.setVelocity = function(v) {
-  vec3.copy(this.velocity, v);
-};
 
 
 Thing.prototype.findThingEncounter = function(thing, threshold) {
