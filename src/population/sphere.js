@@ -27,7 +27,6 @@ Sphere = function(message) {
   this.finalize();
 };
 goog.inherits(Sphere, LeafThing);
-Sphere.type = Types.SPHERE;
 
 Sphere.inited = false;
 Sphere.normalBuffer = null;

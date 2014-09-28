@@ -11,6 +11,7 @@
     <path id="src.js.fileset">
       <fileset dir="src"><include name="*.js" /></fileset>
       <fileset dir="src/camera"><include name="*.js" /></fileset>
+      <fileset dir="src/client"><include name="*.js" /></fileset>
       <fileset dir="src/effects"><include name="*.js" /></fileset>
       <fileset dir="src/gl"><include name="*.js" /></fileset>
       <fileset dir="src/input"><include name="*.js" /></fileset>

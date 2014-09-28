@@ -28,10 +28,25 @@ Thing = function(message) {
   this.position = vec3.nullableClone(message.position);
   this.velocity = vec3.nullableClone(message.velocity);
   this.lastPosition = vec3.clone(this.position);
+  this.color = message.color || vec4.fromValues(1, 1, 1, 1);
 
-  this.scale = vec3.fromValues(1, 1, 1);
 
-  this.alive = message.alive !== false;
+  this.scale = message.uScale ?
+      vec3.fromValues(message.uScale,
+          message.uScale,
+          message.uScale) :
+      message.scale || vec3.fromValues(1, 1, 1);
+
+  if (message.parentScale) {
+    vec3.multiply(this.scale,
+        this.scale,
+        message.parentScale);
+    vec3.multiply(this.position,
+        this.position,
+        message.parentScale);
+  }
+
+  this.alive = !(message.alive === false || message.alive === 0);
   this.age = 0;
   this.damageMultiplier = message.damageMultiplier || 1;
 
@@ -342,6 +357,9 @@ Thing.prototype.dispose = function() {
 
 Thing.prototype.setParent = function(parent) {
   this.parent = parent;
+  // console.log(this.parent.scale);
+  // vec3.multiply(this.scale, this.scale, this.parent.scale);
+  // console.log(this.scale);
 };
 
 
@@ -425,6 +443,14 @@ Thing.prototype.getRoot = function() {
 
 Thing.prototype.eachPart = function(fn) {
   util.array.forEach(this.parts, fn, this);
+};
+
+
+Thing.prototype.eachPartRecursive = function(fn) {
+  util.array.forEach(this.parts, function(part) {
+    fn.call(this, part);
+    part.eachPartRecursive(fn);
+  }, this);
 };
 
 

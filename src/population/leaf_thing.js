@@ -17,7 +17,6 @@ LeafThing = function(message) {
   this.elementType = message.elementType || GL.TRIANGLES;
   this.drawType = message.drawType || LeafThing.DrawType.ARRAYS;
   this.texture = message.texture || null;
-  this.color = message.color || vec4.fromValues(1, 1, 1, 1);
   this.vertexBuffer = null;
   this.textureBuffer = null;
   this.indexBuffer = null;

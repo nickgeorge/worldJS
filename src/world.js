@@ -25,6 +25,10 @@ World = function() {
 
   this.sortBeforeDrawing = true;
   this.paused = false;
+
+  // clientworld only.
+  this.thingsById = {};
+  this.stateSet = false;
 };
 
 
@@ -50,6 +54,7 @@ World.prototype.getCamera = function() {
 World.prototype.addThing = function(thing) {
   this.drawables.add(thing);
   this.things.add(thing);
+  this.thingsById[thing.id] = thing;
 };
 
 
@@ -158,4 +163,53 @@ World.prototype.updateLists = function() {
 
 World.prototype.setBackgroundColor = function(color) {
   this.backgroundColor = color;
+};
+
+
+/**
+ * @param {Reader} reader
+ */
+World.prototype.setState = function(reader) {
+  // TODO: bump to 3 when effects/projectiles
+  for (var i = 0; i < 3; i++) {
+    reader.performAddRemove();
+    var writablesCount = reader.readInt32();
+    // console.log('Count: ' + writablesCount);
+    for (var j = 0; j < writablesCount; j++) {
+      var id = reader.readInt32();
+      this.addThing(reader.readThing().setId(id));
+    }
+    reader.checkSync();
+
+
+    reader.checkSync();
+  }
+  this.stateSet = true;
+};
+
+
+/**
+ * @param {Reader} reader
+ */
+World.prototype.updateWorld = function(reader) {
+  for (var i = 0; i < 3; i++) {
+    reader.performAddRemove();
+    var writablesCount = reader.readInt32();
+    for (var j = 0; j < writablesCount; j++) {
+      var id = reader.readInt32();
+      var message = reader.readThingMessage();
+      var thing = this.getThing(id);
+      if (thing) thing.update(message);
+      else {
+      }
+    }
+    reader.checkSync();
+
+
+    reader.checkSync();
+  }
+};
+
+World.prototype.getThing = function(id) {
+  return this.thingsById[id];
 };

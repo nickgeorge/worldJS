@@ -32,7 +32,6 @@ Pane = function(message) {
   this.finalize();
 };
 goog.inherits(Pane, LeafThing);
-Pane.type = Types.PANE;
 
 
 Pane.prototype.createVerticies = function() {

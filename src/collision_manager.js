@@ -23,6 +23,7 @@ CollisionManager.prototype.registerCollisionCondition = function(
     classA, classB, thresholdFunction, collisionFunction) {
   var typeA = classA.type;
   var typeB = classB.type;
+
   var key = CollisionManager.getKey(typeA, typeB);
   var reverseKey = CollisionManager.getKey(typeB, typeA);
   var condition = new CollisionCondition(

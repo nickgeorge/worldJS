@@ -37,7 +37,6 @@ Box = function(message) {
   this.finalize();
 };
 goog.inherits(Box, LeafThing);
-Box.type = Types.BOX;
 
 
 Box.Faces = [
