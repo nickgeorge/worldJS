@@ -58,6 +58,13 @@ World.prototype.addThing = function(thing) {
 };
 
 
+World.prototype.removeThing = function(thing) {
+  this.drawables.remove(thing);
+  this.things.remove(thing);
+  this.thingsById[thing.id] = null;
+};
+
+
 World.prototype.addProjectile = function(projectile) {
   this.drawables.add(projectile);
   this.projectiles.add(projectile);
@@ -170,14 +177,14 @@ World.prototype.setBackgroundColor = function(color) {
  * @param {Reader} reader
  */
 World.prototype.setState = function(reader) {
-  // TODO: bump to 3 when effects/projectiles
   for (var i = 0; i < 3; i++) {
     reader.performAddRemove();
     var writablesCount = reader.readInt32();
     // console.log('Count: ' + writablesCount);
     for (var j = 0; j < writablesCount; j++) {
       var id = reader.readInt32();
-      this.addThing(reader.readThing().setId(id));
+      var thing = reader.readThing().setId(id);
+      if (thing.alive) this.addThing(thing);
     }
     reader.checkSync();
 

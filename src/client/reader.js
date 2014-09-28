@@ -111,7 +111,7 @@ Reader.prototype.performAddRemove = function() {
   for (var i = 0; i < addListCount; i++) {
     var id = this.readInt32();
     var thing = this.readThing().setId(id);
-    if (!Env.world.thingsById[id]) {
+    if (!Env.world.thingsById[id] && thing.alive) {
       Env.world.addThing(thing);
     }
   }
@@ -120,8 +120,8 @@ Reader.prototype.performAddRemove = function() {
   var removeListCount = this.readInt32();
   for (var i = 0; i < removeListCount; i++) {
     var id = this.readInt32();
-    // Env.world.removeThing(this.readThing().setId(id));
-    this.readThing().setId(id);
+    var thing = Env.world.thingsById[id];
+    Env.world.removeThing(thing);
   }
   this.checkSync();
 };

@@ -14,6 +14,7 @@ MessageCode = {
   SCORE: 11,
   NAME_MAP: 12,
   MY_NAME_IS: 13,
+  RESTART: 14,
   SYNC: 98,
   EOM: 99
 };
