@@ -22,8 +22,9 @@ goog.inherits(DataThing, LeafThing);
 
 /**
  * @typedef {{
- *   vertexCoordinates: Array.<number>,
- *   normalCoordinates: Array.<number>,
+ *   coordinates: Array.<number>,
+ *   normals: Array.<number>,
+ *   textureCoordinates: Array.<number>,
  *   type: string
  * }}
  */
@@ -34,7 +35,7 @@ DataThing.positionBufferCache = {};
 DataThing.prototype.getPositionBuffer = function() {
   if (!DataThing.positionBufferCache[this.data.type]) {
     DataThing.positionBufferCache[this.data.type] =
-        Env.gl.generateBuffer(this.data.vertexCoordinates, 3);
+        Env.gl.generateBuffer(this.data.coordinates, 3);
   }
   return DataThing.positionBufferCache[this.data.type];
 };
@@ -44,7 +45,7 @@ DataThing.normalBufferCache = {};
 DataThing.prototype.getNormalBuffer = function() {
   if (!DataThing.normalBufferCache[this.data.type]) {
     DataThing.normalBufferCache[this.data.type] =
-        Env.gl.generateBuffer(this.data.normalCoordinates, 3);
+        Env.gl.generateBuffer(this.data.normals, 3);
   }
   return DataThing.normalBufferCache[this.data.type];
 };
@@ -53,13 +54,8 @@ DataThing.prototype.getNormalBuffer = function() {
 DataThing.textureBufferCache = {};
 DataThing.prototype.getTextureBuffer = function() {
   if (!DataThing.textureBufferCache[this.data.type]) {
-    var vertexTetextureCoordinates = [];
-    for (var i = 0; i < this.vertexBuffer.numItems; i++) {
-      vertexTetextureCoordinates.push(0);
-      vertexTetextureCoordinates.push(0);
-    };
     DataThing.textureBufferCache[this.data.type] =
-        Env.gl.generateBuffer(vertexTetextureCoordinates, 2);
+        Env.gl.generateBuffer(this.data.textureCoordinates, 2);
   }
   return DataThing.textureBufferCache[this.data.type];
 };

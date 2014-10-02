@@ -4,6 +4,7 @@ goog.provide('Crosshair');
 goog.provide('Logger');
 goog.provide('StartButton');
 goog.provide('Widget');
+goog.provide('UpdatingWriter');
 
 goog.require('util');
 goog.require('Animator');
@@ -178,4 +179,27 @@ StartButton.prototype.render = function() {
   this.context.fillText('Klicken f' + String.fromCharCode(252) + 'r St' + String.fromCharCode(228) + 'rten',
       this.context.canvas.width/2 - 200, this.context.canvas.height/2 - 25);
 };
+
+
+/**
+ * @constructor
+ * @extends {Widget}
+ */
+UpdatingWriter = function(x, y, textFunction) {
+  goog.base(this, x, y);
+  this.textFunction = textFunction;
+
+  this.font = 'bold 28px courier';
+  this.fillStyle = '#00F';
+};
+goog.inherits(UpdatingWriter, Widget);
+
+
+UpdatingWriter.prototype.render = function() {
+  this.setFont(this.font);
+  this.setFillStyle(this.fillStyle);
+  this.context.fillText(this.textFunction(),
+      this.position[0], this.position[1]);
+};
+
 

@@ -458,3 +458,11 @@ Thing.prototype.eachEffect = function(fn) {
   util.array.forEach(this.effects, fn, this);
 };
 
+
+Thing.prototype.setColor = function(color) {
+  this.color = color;
+  this.eachPartRecursive(function(part) {
+    part.color = color;
+  });
+};
+

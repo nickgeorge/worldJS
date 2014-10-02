@@ -121,7 +121,9 @@ Reader.prototype.performAddRemove = function() {
   for (var i = 0; i < removeListCount; i++) {
     var id = this.readInt32();
     var thing = Env.world.thingsById[id];
-    Env.world.removeThing(thing);
+    if (Env.world.thingsById[id]) {
+      Env.world.removeThing(thing);
+    }
   }
   this.checkSync();
 };
