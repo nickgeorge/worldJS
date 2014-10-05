@@ -67,7 +67,7 @@ ContainerManager.prototype.setPointerLock = function(pointerLock) {
   if (pointerLock) {
     this.container.requestPointerLock();
   } else {
-    this.container.exitPointerLock();
+    document.exitPointerLock();
   }
 };
 

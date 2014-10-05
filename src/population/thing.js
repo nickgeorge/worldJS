@@ -49,6 +49,7 @@ Thing = function(message) {
   this.alive = !(message.alive === false || message.alive === 0);
   this.age = 0;
   this.damageMultiplier = message.damageMultiplier || 1;
+  this.visible = !(message.visible === false || message.visible === 0);
 
   this.parts = [];
   this.effects = [];
@@ -307,7 +308,7 @@ Thing.prototype.toUpOrientation = function() {
 }();
 
 Thing.prototype.draw = function() {
-  if (this.isDisposed) return;
+  if (this.isDisposed || !this.visible) return;
   Env.gl.pushModelMatrix();
   this.transform();
   this.render();

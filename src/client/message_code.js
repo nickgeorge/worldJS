@@ -15,6 +15,7 @@ MessageCode = {
   NAME_MAP: 12,
   MY_NAME_IS: 13,
   RESTART: 14,
+  MODE: 15,
   SYNC: 98,
   EOM: 99
 };
