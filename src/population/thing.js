@@ -27,6 +27,7 @@ Thing = function(message) {
 
   this.position = vec3.nullableClone(message.position);
   this.velocity = vec3.nullableClone(message.velocity);
+  this.acceleration = vec3.nullableClone(message.acceleration);
   this.lastPosition = vec3.clone(this.position);
   this.color = message.color || vec4.fromValues(1, 1, 1, 1);
 
@@ -142,6 +143,9 @@ Thing.prototype.advanceBasics = function(dt) {
     } else {
       vec3.scaleAndAdd(this.position, this.position,
           this.velocity,
+          dt);
+      vec3.scaleAndAdd(this.velocity, this.velocity,
+          this.acceleration,
           dt);
     }
   }
