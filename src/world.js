@@ -15,6 +15,8 @@ World = function() {
   this.age = 0;
 
   this.drawables = new ControlledList();
+  this.transluscent = [];
+  this.opaque = [];
 
   this.things = new ControlledList();
   this.projectiles = new ControlledList();
@@ -78,26 +80,6 @@ World.prototype.addEffect = function(effect) {
 
 
 World.prototype.draw = function() {
-  if (this.sortBeforeDrawing) {
-    var cameraPosition = this.camera.getPosition();
-    util.array.forEach(this.drawables.elements, function(thing) {
-      if (thing.isDisposed) return;
-      thing.computeDistanceSquaredToCamera(cameraPosition);
-    });
-
-    this.drawables.elements.sort(function(thingA, thingB) {
-      if (thingA.transluscent != thingB.transluscent) {
-        return thingA.transluscent ? 1 : -1;
-      }
-
-      return thingA.distanceSquaredToCamera -
-          thingB.distanceSquaredToCamera;
-      // return thingB.distanceSquaredToCamera -
-          // thingA.distanceSquaredToCamera;
-    });
-  }
-
-
   Env.gl.reset(this.backgroundColor);
 
   Env.gl.pushViewMatrix();
@@ -106,9 +88,44 @@ World.prototype.draw = function() {
   this.camera.transform();
   Env.gl.setViewMatrixUniforms();
 
-  this.drawables.forEach(function(drawable) {
-    drawable.draw();
-  });
+  if (this.sortBeforeDrawing) {
+    var cameraPosition = this.camera.getPosition();
+
+    this.transluscent.length = 0;
+    this.opaque.length = 0;
+
+    this.drawables.forEach(function(drawable) {
+      if (drawable.isDisposed) return;
+      drawable.computeDistanceSquaredToCamera(cameraPosition);
+      if (drawable.transluscent) {
+        this.transluscent.push(drawable);
+      } else {
+        this.opaque.push(drawable);
+      }
+    }, this);
+
+    this.opaque.sort(function(thingA, thingB) {
+      return thingA.distanceSquaredToCamera -
+          thingB.distanceSquaredToCamera;
+    });
+
+    this.transluscent.sort(function(thingA, thingB) {
+      return thingB.distanceSquaredToCamera -
+          thingA.distanceSquaredToCamera;
+    });
+
+    util.array.forEach(this.opaque, function(opaqueDrawable) {
+      opaqueDrawable.draw();
+    });
+
+    util.array.forEach(this.transluscent, function(transluscentDrawable) {
+      transluscentDrawable.draw();
+    });
+  } else {
+    this.drawables.forEach(function(drawable) {
+      drawable.draw();
+    });
+  }
 
   Env.gl.popViewMatrix();
 };

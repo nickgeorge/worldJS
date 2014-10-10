@@ -26,6 +26,12 @@ ControlledList.prototype.remove = function(element) {
   this.elementsToRemove.push(element);
 };
 
+
+ControlledList.prototype.sort = function(sortFunction) {
+  this.elements.sort(sortFunction);
+};
+
+
 ControlledList.prototype.size = function() {
   return this.elements.length;
 };
