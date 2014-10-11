@@ -1,7 +1,8 @@
 goog.provide('ContainerManager');
 
 /** @constructor @struct */
-ContainerManager = function(container) {
+ContainerManager = function(fullscreenContainer, container) {
+  this.fullscreenContainer = fullscreenContainer;
   this.container = container;
   this.keyMap = {};
   this.mouseMap = {};
@@ -17,15 +18,17 @@ ContainerManager = function(container) {
   this.container.addEventListener('mouseup',
       util.bind(this.onMouseButton, this));
 
+  this.fullscreen = false;
+
   this.container.focus();
 };
 ContainerManager.instance_ = null;
 
-ContainerManager.initSingleton = function(container) {
+ContainerManager.initSingleton = function(fullscreenContainer, container) {
   util.assertNull(ContainerManager.instance_,
       'Cannot init ContainerManager: already init\'d');
 
-  ContainerManager.instance_ = new ContainerManager(container);
+  ContainerManager.instance_ = new ContainerManager(fullscreenContainer, container);
   return ContainerManager.instance_;
 };
 
@@ -56,10 +59,15 @@ ContainerManager.prototype.isMouseButtonDown = function(button) {
 
 ContainerManager.prototype.setFullScreen = function(fullscreen) {
   if (fullscreen) {
-    this.container.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
+    this.fullscreenContainer.requestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
   } else {
-    this.container.exitFullScreen();
+    this.fullscreenContainer.exitFullScreen();
   }
+};
+
+
+ContainerManager.prototype.isFullScreen = function() {
+  return this.fullscreen;
 };
 
 
@@ -83,11 +91,11 @@ ContainerManager.prototype.isPointerLocked = function() {
 
 /** @suppress {missingProperties} */
 ContainerManager.prototype.resolvePrefixes = function() {
-  this.container.requestFullScreen = this.container.requestFullscreen ||
+  this.fullscreenContainer.requestFullScreen = this.container.requestFullscreen ||
       this.container.mozRequestFullScreen ||
       this.container.webkitRequestFullscreen;
 
-  this.container.exitFullScreen = this.container.exitFullscreen ||
+  this.fullscreenContainer.exitFullScreen = this.container.exitFullscreen ||
       this.container.mozCancelFullScreen ||
       this.container.webkitExitFullscreen;
 
