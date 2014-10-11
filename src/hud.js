@@ -11,11 +11,13 @@ goog.require('Animator');
 
 /** @constructor @struct */
 HUD = function(canvas) {
+  this.widgets = [];
   this.canvas = canvas;
   this.context = canvas.getContext('2d');
   this.isRendering = true;
+  this.logger = new Logger(10, 300);
+  this.addWidget(this.logger);
 
-  this.widgets = [];
 };
 
 HUD.prototype.render = function() {
@@ -129,35 +131,38 @@ Logger = function(x, y) {
   goog.base(this, x, y);
 
   this.activeLines = 0;
-  this.maxLinesToShow = 3;
+  this.maxLinesToShow = 6;
   this.index = 0;
   this.lines = [];
+  this.timeout = null;
 };
 goog.inherits(Logger, Widget);
+
 
 Logger.prototype.log = function(line) {
   this.lines.push(line);
   this.activeLines = Math.min(this.maxLinesToShow, this.activeLines + 1);
-  setTimeout(util.bind(this.fade, this), 5000);
+  clearTimeout(this.timeout);
+  this.timeout = setTimeout(util.bind(this.fade, this), 5000);
 };
+
 
 Logger.prototype.fade = function() {
   this.activeLines = Math.max(0, this.activeLines - 1);
+  if (this.activeLines > 0) setTimeout(util.bind(this.fade, this), 5000);
 };
+
 
 Logger.prototype.render = function() {
   if (!this.activeLines) return;
   var length = this.lines.length;
-  this.setFillStyle('#AAA');
-  this.setFont('bold 20px courier');
-  this.context.fillText(this.lines[length - 1],
-      this.position[0], this.position[1]);
-  this.setFont('16px courier');
-  for (var i = 1; i < this.activeLines && i < this.maxLinesToShow; i++) {
+  this.setFillStyle('#CCC');
+  this.setFont('14px courier');
+  for (var i = 0; i < this.activeLines && i < this.maxLinesToShow; i++) {
     var line = this.lines[length - i - 1];
     if (!line) return;
     this.context.fillText(line,
-        this.position[0], this.position[1] + 25*(i));
+        this.position[0], this.position[1] - 25*(i));
   }
 };
 

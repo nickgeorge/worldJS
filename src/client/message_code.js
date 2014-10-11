@@ -16,6 +16,8 @@ MessageCode = {
   MY_NAME_IS: 13,
   RESTART: 14,
   MODE: 15,
+  SAY: 16,
+  BROADCAST: 17,
   SYNC: 98,
   EOM: 99
 };

@@ -26,3 +26,20 @@ body {
 #hidden-canvas {
   display: none;
 }
+
+
+#prompt-box {
+  position: absolute;
+  background-color: white;
+  z-index: 100;
+
+  padding: 4px 5px 7px 5px;
+  box-shadow: 2px 2px 2px #888;
+  border-top: 2px solid #CCC;
+  border-left: 2px solid #CCC;
+
+  box-shadow: 2px 2px 2px #A300BD;
+  border-top: 2px solid #E751FF;
+  border-left: 2px solid #F347FF;
+  background-color: #E572FD;
+}

@@ -42,6 +42,7 @@ Reader.prototype.readString = function() {
   var str = String.fromCharCode.apply(
       null, new Uint8Array(this.buffer, this.position, length));
   this.position += length;
+  console.log(str);
   return str;
 };
 

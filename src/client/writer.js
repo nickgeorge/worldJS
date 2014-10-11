@@ -27,3 +27,8 @@ Writer.prototype.writeString = function(str) {
   }
 };
 
+
+Writer.prototype.getBytes = function() {
+  return new Int8Array(this.buffer);
+};
+
