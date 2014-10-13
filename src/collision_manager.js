@@ -35,6 +35,13 @@ CollisionManager.prototype.registerCollisionCondition = function(
 };
 
 
+CollisionManager.prototype.isRegisteredCollision = function(thingA, thingB) {
+  return Boolean(this.collisionConditions[CollisionManager.getKey(
+      thingA.getType(),
+      thingB.getType())]);
+};
+
+
 CollisionManager.prototype.checkCollisions = function() {
   this.thingOnThing();
   this.thingOnProjectile();
@@ -45,6 +52,7 @@ CollisionManager.prototype.thingOnProjectile = function() {
   for (var i = 0, thing; thing = this.world.things.get(i); i++) {
     for (var j = 0, projectile; projectile = this.world.projectiles.get(j); j++) {
       if (thing.isDisposed || projectile.isDisposed) continue;
+      if (!this.isRegisteredCollision(thing, projectile)) continue;
       if (!projectile.alive) continue;
       if (util.math.sqr(thing.getOuterRadius() + projectile.getOuterRadius()) <
           thing.distanceSquaredTo(projectile)) {
@@ -59,17 +67,31 @@ CollisionManager.prototype.thingOnProjectile = function() {
 CollisionManager.prototype.thingOnThing = function() {
   // TODO: Check everything, collide with the collision with min
   // value of t
+  var yay = 0;
+  var total = 0;
+  // var nay = 0;
   for (var i = 0, thingA; thingA = this.world.things.get(i); i++) {
     for (var j = i + 1, thingB; thingB = this.world.things.get(j); j++) {
-      if (thingA.isDisposed || thingB.isDisposed) return;
-      var minDistance = thingA.distanceSquaredTo(thingB);
-      if (util.math.sqr(thingA.getOuterRadius() + thingB.getOuterRadius()) <
-          minDistance) {
-        continue;
-      }
-      this.test(thingA, thingB);
+      this.doPerPair(thingA, thingB);
     }
   }
+  // console.log(yay + " / " + total);
+};
+
+
+CollisionManager.prototype.doPerPair = function(thingA, thingB) {
+  // total++;
+  if (thingA.isDisposed || thingB.isDisposed) return;
+  if (!this.isRegisteredCollision(thingA, thingB)) return;
+  if (thingA.ground == thingB || thingB.ground == thingA) return;
+  var minDistance = thingA.distanceSquaredTo(thingB);
+  if (util.math.sqr(thingA.getOuterRadius() + thingB.getOuterRadius()) <
+      minDistance) {
+    // nay++;
+    return;
+  }
+  // yay++;
+  this.test(thingA, thingB);
 };
 
 

@@ -91,13 +91,13 @@ ContainerManager.prototype.isPointerLocked = function() {
 
 /** @suppress {missingProperties} */
 ContainerManager.prototype.resolvePrefixes = function() {
-  this.fullscreenContainer.requestFullScreen = this.container.requestFullscreen ||
-      this.container.mozRequestFullScreen ||
-      this.container.webkitRequestFullscreen;
+  this.fullscreenContainer.requestFullScreen = this.fullscreenContainer.requestFullscreen ||
+      this.fullscreenContainer.mozRequestFullScreen ||
+      this.fullscreenContainer.webkitRequestFullscreen;
 
-  this.fullscreenContainer.exitFullScreen = this.container.exitFullscreen ||
-      this.container.mozCancelFullScreen ||
-      this.container.webkitExitFullscreen;
+  this.fullscreenContainer.exitFullScreen = this.fullscreenContainer.exitFullscreen ||
+      this.fullscreenContainer.mozCancelFullScreen ||
+      this.fullscreenContainer.webkitExitFullscreen;
 
   this.container.requestPointerLock = this.container.requestPointerLock ||
       this.container.mozRequestPointerLock ||

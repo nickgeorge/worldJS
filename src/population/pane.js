@@ -137,6 +137,10 @@ Pane.prototype.getNormal = function() {
 
 Pane.positionBufferCache = {};
 Pane.prototype.getPositionBuffer = function() {
+  if (this.dynamic) {
+    return Env.gl.generateBuffer(this.verticies, 3);
+  }
+
   var cache = Pane.positionBufferCache;
   if (!cache[this.size[0]]) {
     cache[this.size[0]] = {};

@@ -54,28 +54,38 @@ World.prototype.getCamera = function() {
 
 
 World.prototype.addThing = function(thing) {
-  this.drawables.add(thing);
+  this.addDrawable(thing);
   this.things.add(thing);
   this.thingsById[thing.id] = thing;
 };
 
 
 World.prototype.removeThing = function(thing) {
-  this.drawables.remove(thing);
+  this.removeDrawable(thing);
   this.things.remove(thing);
   this.thingsById[thing.id] = null;
 };
 
 
 World.prototype.addProjectile = function(projectile) {
-  this.drawables.add(projectile);
+  this.addDrawable(projectile);
   this.projectiles.add(projectile);
 };
 
 
 World.prototype.addEffect = function(effect) {
-  this.drawables.add(effect);
+  this.addDrawable(effect);
   this.effects.add(effect);
+};
+
+
+World.prototype.addDrawable = function(drawable) {
+  this.drawables.add(drawable);
+};
+
+
+World.prototype.removeDrawable = function(drawable) {
+  this.drawables.remove(drawable);
 };
 
 
@@ -132,6 +142,11 @@ World.prototype.draw = function() {
 
 
 World.prototype.advance = function(dt) {
+  this.advanceBasics(dt);
+};
+
+
+World.prototype.advanceBasics = function(dt) {
   this.age += dt;
   this.updateLists();
 

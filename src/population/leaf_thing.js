@@ -17,6 +17,7 @@ LeafThing = function(message) {
   this.elementType = message.elementType || GL.TRIANGLES;
   this.drawType = message.drawType || LeafThing.DrawType.ARRAYS;
   this.texture = message.texture || null;
+  this.dynamic = message.dynamic || false;
   this.vertexBuffer = null;
   this.textureBuffer = null;
   this.indexBuffer = null;

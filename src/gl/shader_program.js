@@ -94,6 +94,7 @@ ShaderProgram.createShaderProgram = function(gl, vertexShader, fragmentShader) {
   shaderProgram.loadedIndexBuffer = null;
   shaderProgram.loadedPositionBuffer = null;
   shaderProgram.loadedTextureBuffer = null;
+  shaderProgram.isUsingTexture = false;
 
   return shaderProgram;
 };
@@ -110,7 +111,9 @@ ShaderProgram.prototype.setUseLighting = function(useLighting) {
 };
 
 ShaderProgram.prototype.setUseTexture = function(useTexture) {
+  if (useTexture == this.isUsingTexture) return;
   this.gl.uniform1i(this.useTextureUniform, useTexture);
+  this.isUsingTexture = useTexture;
 };
 
 ShaderProgram.prototype.setUniformColor = function(uniformColor) {
