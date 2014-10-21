@@ -3,6 +3,7 @@ vec3.I = vec3.fromValues(1, 0, 0);
 vec3.J = vec3.fromValues(0, 1, 0);
 vec3.K = vec3.fromValues(0, 0, 1);
 vec3.NEG_K = vec3.fromValues(0, 0, -1);
+vec4.WHITE = vec4.fromValues(1, 1, 1, 1);
 
 /**
  * A vector that can be used as a temporary container.

@@ -45,9 +45,25 @@ Pane.prototype.createVerticies = function() {
 };
 
 
-Pane.prototype.contains_lc = function(p_lc) {
+Pane.prototype.snapIn = function(thing) {
+  var p_lc = this.worldToLocalCoords(thing.position, thing.position);
   for (var i = 0; i < 2; i++) {
-    var size = this.size[i]/2;
+    var halfSize = this.size[i]/2;
+    if (p_lc[i] < -halfSize) {
+      p_lc[i] = -halfSize + .1;
+    }
+    if (p_lc[i] > halfSize) {
+      p_lc[i] = halfSize - .1;
+    }
+  }
+  this.localToParentCoords(thing.position, thing.position);
+};
+
+
+Pane.prototype.contains_lc = function(p_lc, opt_tolerance) {
+  var tolerance = opt_tolerance || 0;
+  for (var i = 0; i < 2; i++) {
+    var size = this.size[i]/2 + tolerance;
     if (p_lc[i] < -size || p_lc[i] > size) {
       return false;
     }
@@ -56,7 +72,17 @@ Pane.prototype.contains_lc = function(p_lc) {
 };
 
 
-Pane.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold) {
+/**
+ * @param {vec3} p_0_pc Initial position.
+ * @param {vec3} p_1_pc Final position.
+ * @param {number} threshold How close the encounter has to be.
+ * @param {Object.<string, *>=} opt_extraArgs More crap.
+ */
+Pane.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold,
+    opt_extraArgs) {
+
+  var tolerance = opt_extraArgs ? opt_extraArgs.tolerance : 0;
+
   var cache = this.objectCache.findEncounter;
   var p_0_lc = this.parentToLocalCoords(cache.p_0_lc, p_0_pc);
   var p_1_lc = this.parentToLocalCoords(cache.p_1_lc, p_1_pc);
@@ -71,7 +97,7 @@ Pane.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold) {
         p_0_lc,
         delta,
         t_cross);
-    if (this.contains_lc(p_int_lc)) {
+    if (this.contains_lc(p_int_lc, tolerance)) {
       // We've intersected the pane in this past frame
       // If threshold is 0 (intersection), this is the only form of
       // encounter we have to consider.
@@ -86,10 +112,10 @@ Pane.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold) {
   // outside of the pane.
 
   // Add first/last points, if they're contained
-  if (this.contains_lc(p_0_lc)) {
+  if (this.contains_lc(p_0_lc, tolerance)) {
     this.maybeSetEncounter_(threshold, 0, p_0_lc[2], p_0_lc);
   }
-  if (this.contains_lc(p_1_lc)) {
+  if (this.contains_lc(p_1_lc, tolerance)) {
     this.maybeSetEncounter_(threshold, 1, p_1_lc[2], p_1_lc);
   }
 
@@ -103,7 +129,7 @@ Pane.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold) {
       if (maxInI > bound && minInI < bound) {
         var t = (bound - p_0_lc[i]) / delta[i];
         var p = vec3.scaleAndAdd(cache.encounterPoint, p_0_lc, delta, t);
-        if (this.contains_lc(p)) {
+        if (this.contains_lc(p, tolerance)) {
           this.maybeSetEncounter_(threshold, t, p[2], p);
         }
       }

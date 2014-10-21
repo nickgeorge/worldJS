@@ -180,20 +180,32 @@ Thing.prototype.getConjugateUp = function() {
 }();
 
 
-Thing.prototype.findThingEncounter = function(thing, threshold) {
+/**
+ * @param {Thing} thing
+ * @param {number} threshold
+ * @param {Object.<String, *>=} opt_extraArgs
+ */
+Thing.prototype.findThingEncounter = function(thing, threshold, opt_extraArgs) {
   return this.findEncounter(
-      thing.lastPosition, thing.position, threshold);
+      thing.lastPosition, thing.position, threshold, opt_extraArgs);
 };
 
 
-Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold) {
+/**
+ * @param {vec3} p_0_pc
+ * @param {vec3} p_1_pc
+ * @param {number} threshold
+ * @param {Object.<string, *>=} opt_extraArgs
+ */
+Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold, opt_extraArgs) {
   var cache = this.objectCache.findEncounter;
   var p_0 = this.parentToLocalCoords(cache.p_0, p_0_pc);
   var p_1 = this.parentToLocalCoords(cache.p_1, p_1_pc);
 
   var closestEncounter = null;
   for (var i = 0; this.parts[i]; i++) {
-    var encounter = this.parts[i].findEncounter(p_0, p_1, threshold);
+    if (opt_extraArgs && this.parts[i] == opt_extraArgs.exclude) continue;
+    var encounter = this.parts[i].findEncounter(p_0, p_1, threshold, opt_extraArgs);
     if (!encounter) continue;
     if (!closestEncounter) {
       closestEncounter = encounter;
@@ -469,5 +481,9 @@ Thing.prototype.setColor = function(color) {
   this.eachPartRecursive(function(part) {
     part.color = color;
   });
+};
+
+Thing.prototype.getParts = function() {
+  return this.parts;
 };
 

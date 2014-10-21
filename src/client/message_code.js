@@ -10,7 +10,6 @@ MessageCode = {
   YOU_ARE: 7,
   KEY_EVENT: 8,
   MOUSE_MOVE_EVENT: 9,
-  MOUSE_CLICK_EVENT: 10,
   SCORE: 11,
   NAME_MAP: 12,
   MY_NAME_IS: 13,
@@ -19,5 +18,9 @@ MessageCode = {
   SAY: 16,
   BROADCAST: 17,
   SYNC: 98,
-  EOM: 99
+  EOM: 99,
+
+  // Weird
+  LEFT_CLICK_EVENT: 101,
+  RIGHT_CLICK_EVENT: 102,
 };
