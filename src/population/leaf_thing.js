@@ -55,7 +55,7 @@ LeafThing.prototype.renderSelf = function() {
   }
   shaderProgram.bindVertexPositionBuffer(this.vertexBuffer);
   shaderProgram.bindVertexNormalBuffer(this.normalBuffer);
-  shaderProgram.bindVertexTextureBuffer(this.textureBuffer);
+  if (this.textureBuffer) shaderProgram.bindVertexTextureBuffer(this.textureBuffer);
   shaderProgram.bindVertexIndexBuffer(this.indexBuffer);
 
   if (this.drawType == LeafThing.DrawType.ELEMENTS) {
