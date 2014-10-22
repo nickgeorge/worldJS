@@ -31,6 +31,9 @@ World = function() {
   // clientworld only.
   this.thingsById = {};
   this.stateSet = false;
+
+  /** @type Object.<string, ControlledList> */
+  this.thingsByType = {};
 };
 
 
@@ -57,6 +60,12 @@ World.prototype.addThing = function(thing) {
   this.addDrawable(thing);
   this.things.add(thing);
   this.thingsById[thing.id] = thing;
+
+  var key = thing.getType();
+  if (!this.thingsByType[key]) {
+    this.thingsByType[key] = new ControlledList();
+  }
+  this.thingsByType[key].add(thing);
 };
 
 
@@ -64,6 +73,12 @@ World.prototype.removeThing = function(thing) {
   this.removeDrawable(thing);
   this.things.remove(thing);
   this.thingsById[thing.id] = null;
+
+  var key = thing.getType();
+  if (!this.thingsByType[key]) {
+    this.thingsByType[key] = new ControlledList();
+  }
+  this.thingsByType[key].remove(thing);
 };
 
 
@@ -86,6 +101,16 @@ World.prototype.addDrawable = function(drawable) {
 
 World.prototype.removeDrawable = function(drawable) {
   this.drawables.remove(drawable);
+};
+
+
+World.prototype.getThingsByType = function(type) {
+  return this.thingsByType[type];
+};
+
+
+World.prototype.getThingsByClass = function(klass) {
+  return this.getThingsByType(klass.getType());
 };
 
 
@@ -193,6 +218,10 @@ World.prototype.updateLists = function() {
   this.effects.update();
   this.projectiles.update();
   this.drawables.update();
+
+  util.object.forEach(this.thingsByType, function(value) {
+    value.update();
+  });
 
   while (this.disposables.length > 100) {
     this.disposables.shift().dispose();

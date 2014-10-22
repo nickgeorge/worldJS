@@ -44,6 +44,20 @@ ControlledList.prototype.update = function() {
   this.elementsToRemove.length = 0;
 };
 
+/**
+ * @param {ControlledList} otherList
+ * @param {Function} f
+ * @param {*=} opt_ctx
+ */
+ControlledList.prototype.forEachCross = function(
+    otherList, f, opt_ctx) {
+  this.forEach(function(element) {
+    otherList.forEach(function(otherElement) {
+      f.call(opt_ctx, element, otherElement);
+    }, opt_ctx);
+  }, opt_ctx);
+};
+
 
 /**
  * @param {Function} f

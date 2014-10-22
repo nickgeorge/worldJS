@@ -12,6 +12,12 @@ CollisionManager = function(world) {
   this.world = world;
   this.collisionConditions = {};
 
+  // this.bins = {};
+  // this.binSize = 75;
+  // this.binOverlap =
+
+  this.filtered = [];
+
   this.registerCollisionConditions();
 };
 
@@ -67,30 +73,23 @@ CollisionManager.prototype.thingOnProjectile = function() {
 CollisionManager.prototype.thingOnThing = function() {
   // TODO: Check everything, collide with the collision with min
   // value of t
-  var yay = 0;
-  var total = 0;
-  // var nay = 0;
   for (var i = 0, thingA; thingA = this.world.things.get(i); i++) {
     for (var j = i + 1, thingB; thingB = this.world.things.get(j); j++) {
       this.doPerPair(thingA, thingB);
     }
   }
-  // console.log(yay + " / " + total);
 };
 
 
 CollisionManager.prototype.doPerPair = function(thingA, thingB) {
-  // total++;
   if (thingA.isDisposed || thingB.isDisposed) return;
   if (!this.isRegisteredCollision(thingA, thingB)) return;
   if (thingA.ground == thingB || thingB.ground == thingA) return;
   var minDistance = thingA.distanceSquaredTo(thingB);
   if (util.math.sqr(thingA.getOuterRadius() + thingB.getOuterRadius()) <
       minDistance) {
-    // nay++;
     return;
   }
-  // yay++;
   this.test(thingA, thingB);
 };
 

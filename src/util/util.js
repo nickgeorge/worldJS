@@ -420,6 +420,12 @@ util.array.getOnlyElement = function(arr) {
 /*    util.object     */
 /**********************/
 util.object = {};
+
+/**
+ * @param {Object.<string, *>} obj
+ * @param {Function} f
+ * @param {*=} opt_ctx
+ */
 util.object.forEach = function(obj, f, opt_ctx) {
   for (var key in obj) {
     f.call(opt_ctx, obj[key], key, obj);
