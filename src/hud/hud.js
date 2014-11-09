@@ -181,7 +181,9 @@ StartButton.prototype.render = function() {
   if (!Animator.getInstance().isPaused()) return;
   this.setFont('56px wolfenstein');
   this.setFillStyle('#FFF');
-  this.context.fillText('Klicken f' + String.fromCharCode(252) + 'r St' + String.fromCharCode(228) + 'rten',
+  // this.context.fillText('Klicken f' + String.fromCharCode(252) + 'r St' + String.fromCharCode(228) + 'rten',
+  //     this.context.canvas.width/2 - 200, this.context.canvas.height/2 - 25);
+  this.context.fillText('Click to Start',
       this.context.canvas.width/2 - 200, this.context.canvas.height/2 - 25);
 };
 

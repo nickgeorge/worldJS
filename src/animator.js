@@ -100,3 +100,7 @@ Animator.prototype.profile = function(t) {
     this.paused = true;
   }, t*1000);
 };
+
+Animator.profile = function(opt_t) {
+  Animator.getInstance().profile(opt_t || 10);
+};

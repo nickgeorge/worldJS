@@ -8,6 +8,7 @@ goog.require('LeafThing');
  * @constructor
  * @extends {LeafThing}
  * @struct
+ *
  * @suppress {missingProperties}
  */
 // TODO: cache position buffers!
@@ -50,13 +51,13 @@ Pane.prototype.snapIn = function(thing) {
   for (var i = 0; i < 2; i++) {
     var halfSize = this.size[i]/2;
     if (p_lc[i] < -halfSize) {
-      p_lc[i] = -halfSize + .1;
+      p_lc[i] = -halfSize;
     }
     if (p_lc[i] > halfSize) {
-      p_lc[i] = halfSize - .1;
+      p_lc[i] = halfSize;
     }
   }
-  this.localToParentCoords(thing.position, thing.position);
+  this.localToWorldCoords(thing.position, p_lc);
 };
 
 
@@ -77,6 +78,8 @@ Pane.prototype.contains_lc = function(p_lc, opt_tolerance) {
  * @param {vec3} p_1_pc Final position.
  * @param {number} threshold How close the encounter has to be.
  * @param {Object.<string, *>=} opt_extraArgs More crap.
+ *
+ * @suppress {missingProperties}
  */
 Pane.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold,
     opt_extraArgs) {
@@ -155,9 +158,8 @@ Pane.prototype.maybeSetEncounter_ = function(threshold, t, distance, point) {
 
 
 Pane.prototype.getNormal = function() {
-  return this.localToWorldCoords(this.objectCache.normal,
-      vec3.K,
-      0);
+  return this.localToWorldVector(this.objectCache.normal,
+      vec3.K);
 };
 
 

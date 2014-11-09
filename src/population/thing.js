@@ -111,7 +111,7 @@ Thing.prototype.advanceBasics = function(dt) {
   if (this.isDisposed) return;
   this.age += dt;
   if (this.effects.length) {
-      for (var i = 0; this.effects[i]; i++) {
+    for (var i = 0; this.effects[i]; i++) {
       this.effects[i].advance(dt);
     }
   }
@@ -181,6 +181,128 @@ Thing.prototype.getConjugateUp = function() {
 
 
 /**
+ * Transforms a coordinate in local-space into parent-space.
+ * @param {vec3} out The receiving Vector3.  Also returned.
+ * @param {vec3} v Coordinate in local-space.
+ * @return {vec3} the coordinate in parent-space.
+ */
+Thing.prototype.localToParentCoords = function(out, v) {
+  vec3.transformQuat(out, v, this.upOrientation);
+  vec3.add(out, out, this.position);
+  return out;
+};
+
+
+/**
+ * Transforms a vector in local-space to parent-space
+ * @param {vec3} out The receiving Vector3. Also returned.
+ * @param {vec3} v The vector in local-space
+ * @return {vec3} The vector in parent-space.
+ */
+Thing.prototype.localToParentVector = function(out, v) {
+  vec3.transformQuat(out, v, this.upOrientation);
+  return out;
+};
+
+
+/**
+ * Transforms a coordinate in parent-space into local-space.
+ * @param {vec3} out The receiving Vector3.  Also returned.
+ * @param {vec3} v Coordinate in parent-space
+ * @return {vec3} The coordinate in local-space
+ */
+Thing.prototype.parentToLocalCoords = function() {
+  var conjugateUp = quat.create();
+  return function(out, v) {
+    quat.conjugate(conjugateUp, this.upOrientation);
+    vec3.subtract(out, v, this.position);
+    vec3.transformQuat(out, out, conjugateUp);
+    return out;
+  }
+}();
+
+
+/**
+ * Transforms a vector in parent-space into local-space.
+ * @param {vec3} out The receiving Vector3.  Also returned.
+ * @param {vec3} v Vector in parent-space
+ * @return {vec3} The vector in local-space
+ */
+Thing.prototype.parentToLocalVector = function() {
+  var conjugateUp = quat.create();
+  return function(out, v) {
+    quat.conjugate(conjugateUp, this.upOrientation);
+    vec3.transformQuat(out, v, conjugateUp);
+    return out;
+  }
+}();
+
+
+/**
+ * Transforms coordinates in local-space into world-space.
+ * @param {vec3} out The receiving Vector3
+ * @param {vec3} v Coordinates in thing-space
+ * @return {vec3} The coordinates in world-space.
+ */
+Thing.prototype.localToWorldCoords = function(out, v) {
+  this.localToParentCoords(out, v);
+  if (this.parent) {
+    this.parent.localToWorldCoords(out, out);
+  }
+  return out;
+};
+
+
+/**
+ * Transforms a vector in local-space into world-space.
+ * @param {vec3} out The receiving Vector3
+ * @param {vec3} v The vector in thing-space
+ * @return {vec3} The vector in world-space.
+ */
+Thing.prototype.localToWorldVector = function(out, v) {
+  this.localToParentVector(out, v);
+  if (this.parent) {
+    this.parent.localToWorldVector(out, out);
+  }
+  return out;
+};
+
+
+/**
+ * Transforms coordinates in world-space into local-space.
+ * @param {vec3} out The receiving Vector3
+ * @param {vec3} v Coordinates in thing-space.
+ * @return {vec3} The coordinates in local-space.
+ */
+Thing.prototype.worldToLocalCoords = function(out, v) {
+  if (this.parent) {
+    this.parent.worldToLocalCoords(out, v);
+    this.parentToLocalCoords(out, out);
+  } else {
+    this.parentToLocalCoords(out, v);
+  }
+  return out;
+};
+
+
+/**
+ * Transforms vector in world-space into local-space.
+ * @param {vec3} out The receiving Vector3
+ * @param {vec3} v The vector in thing-space.
+ * @return {vec3} The vector in local-space.
+ */
+Thing.prototype.worldToLocalVector = function(out, v) {
+  if (this.parent) {
+    this.parent.worldToLocalVector(out, v);
+    this.parentToLocalVector(out, out);
+  } else {
+    this.parentToLocalVector(out, v);
+  }
+  return out;
+};
+
+
+/**
  * @param {Thing} thing
  * @param {number} threshold
  * @param {Object.<String, *>=} opt_extraArgs
@@ -196,6 +318,8 @@ Thing.prototype.findThingEncounter = function(thing, threshold, opt_extraArgs) {
  * @param {vec3} p_1_pc
  * @param {number} threshold
  * @param {Object.<string, *>=} opt_extraArgs
+ *
+ * @suppress {missingProperties}
  */
 Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold, opt_extraArgs) {
   var cache = this.objectCache.findEncounter;
@@ -204,6 +328,9 @@ Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold, opt_extraArg
 
   var closestEncounter = null;
   for (var i = 0; this.parts[i]; i++) {
+    if (opt_extraArgs) {
+      console.log(this.parts[i] == opt_extraArgs.exclude)
+    }
     if (opt_extraArgs && this.parts[i] == opt_extraArgs.exclude) continue;
     var encounter = this.parts[i].findEncounter(p_0, p_1, threshold, opt_extraArgs);
     if (!encounter) continue;
@@ -218,95 +345,6 @@ Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold, opt_extraArg
     }
   };
   return closestEncounter;
-};
-
-
-Thing.prototype.glom = function(thing, point) {
-  if (this.glommable) {
-    // Env.world.disposables.push(thing);
-    this.addEffect(thing);
-    Env.world.projectiles.remove(thing);
-    vec3.copy(thing.velocity, vec3.ZERO);
-
-    vec3.copy(thing.position, point);
-  } else {
-    this.localToParentCoords(point, point);
-    this.parent.glom(thing, point);
-  }
-};
-
-
-/**
- * Transforms a vector in "thing-space" for this thing
- * into parent coordinates.
- * @param out The receiving Vector3
- * @param v Vector3 in "thing-space"
- * @param {number=} opt_w 1 if position, 0 if vector
- */
-Thing.prototype.localToParentCoords = function(out, v, opt_w) {
-  var w = opt_w === undefined ? 1 : opt_w;
-  if (w == 1) {
-    vec3.transformQuat(out, v, this.upOrientation);
-    vec3.add(out, out, this.position);
-  } else {
-    vec3.transformQuat(out, v, this.upOrientation);
-  }
-  return out;
-};
-
-
-/**
- * Transforms a vector in parent coordinates to local coordinates
- * @param {vec3} out The receiving Vector3
- * @param {vec3} v Vector3 in world coordinates
- * @param {number=} opt_w 1 if position, 0 if vector
- */
-Thing.prototype.parentToLocalCoords = function(out, v, opt_w) {
-  var w = opt_w === undefined ? 1 : opt_w;
-  var conjugateUp = quat.conjugate(quat.temp, this.upOrientation);
-  if (w == 1) {
-    vec3.subtract(out, v, this.position);
-    vec3.transformQuat(out, out, conjugateUp);
-  } else {
-    vec3.transformQuat(out, v, conjugateUp);
-  }
-  return out;
-};
-
-
-/**
- * Transforms a vector in "thing-space" for this thing
- * into world coordinates.
- * @param out The receiving Vector3
- * @param v Vector3 in "thing-space"
- * @param {number=} opt_w 1 if position, 0 if vector
- */
-Thing.prototype.localToWorldCoords = function(out, v, opt_w) {
-  var w = opt_w === undefined ? 1 : opt_w;
-  this.localToParentCoords(out, v, w);
-  if (this.parent) {
-    this.parent.localToWorldCoords(out, out, w);
-  }
-  return out;
-};
-
-
-/**
- * Transforms a vector in world-space
- * into world coordinates for this thing.
- * @param out The receiving Vector3
- * @param v Vector3 in "thing-space"
- * @param {number=} opt_w 1 if position, 0 if vector
- */
-Thing.prototype.worldToLocalCoords = function(out, v, opt_w) {
-  var w = opt_w === undefined ? 1 : opt_w;
-  if (this.parent) {
-    this.parent.worldToLocalCoords(out, v, w);
-    this.parentToLocalCoords(out, out, w);
-  } else {
-    this.parentToLocalCoords(out, v, w);
-  }
-  return out;
 };
 
 Thing.prototype.fromUpOrientation = function() {
@@ -340,12 +378,12 @@ Thing.prototype.transform = function() {
 
 
 Thing.prototype.render = function() {
-  this.eachPart(function(part){
-    part.draw();
-  });
-  this.eachEffect(function(effect){
-    effect.draw();
-  });
+  for (var i = 0; this.parts[i]; i++) {
+    this.parts[i].draw();
+  }
+  for (var i = 0; this.effects[i]; i++) {
+    this.effects[i].draw();
+  }
 };
 
 
@@ -431,16 +469,14 @@ Thing.prototype.setPitchOnly = function(pitch) {
 
 
 Thing.prototype.getNormal = function() {
-  return this.localToWorldCoords(this.objectCache.normal,
-      vec3.J,
-      0);
+  return this.localToWorldVector(this.objectCache.normal,
+      vec3.J);
 };
 
 
 Thing.prototype.getUpNose = function() {
-  return this.localToWorldCoords(this.objectCache.upNose,
-      vec3.NEG_K,
-      0);
+  return this.localToWorldVector(this.objectCache.upNose,
+      vec3.NEG_K);
 };
 
 
@@ -485,5 +521,19 @@ Thing.prototype.setColor = function(color) {
 
 Thing.prototype.getParts = function() {
   return this.parts;
+};
+
+
+Thing.prototype.glom = function(thing, point) {
+  if (this.glommable) {
+    this.addEffect(thing);
+    Env.world.removeProjectile(thing);
+    vec3.copy(thing.velocity, vec3.ZERO);
+
+    vec3.copy(thing.position, point);
+  } else {
+    this.localToParentCoords(point, point);
+    this.parent.glom(thing, point);
+  }
 };
 

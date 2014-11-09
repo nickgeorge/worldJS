@@ -7,6 +7,7 @@ goog.require('util');
 /**
  * @param {World} world
  * @constructor
+ * @struct
  */
 CollisionManager = function(world) {
   this.world = world;
@@ -58,7 +59,7 @@ CollisionManager.prototype.thingOnProjectile = function() {
   for (var i = 0, thing; thing = this.world.things.get(i); i++) {
     for (var j = 0, projectile; projectile = this.world.projectiles.get(j); j++) {
       if (thing.isDisposed || projectile.isDisposed) continue;
-      if (!this.isRegisteredCollision(thing, projectile)) continue;
+      // if (!this.isRegisteredCollision(thing, projectile)) continue;
       if (!projectile.alive) continue;
       if (util.math.sqr(thing.getOuterRadius() + projectile.getOuterRadius()) <
           thing.distanceSquaredTo(projectile)) {
@@ -81,9 +82,12 @@ CollisionManager.prototype.thingOnThing = function() {
 };
 
 
+/**
+ * @suppress {missingProperties}
+ */
 CollisionManager.prototype.doPerPair = function(thingA, thingB) {
   if (thingA.isDisposed || thingB.isDisposed) return;
-  if (!this.isRegisteredCollision(thingA, thingB)) return;
+  // if (!this.isRegisteredCollision(thingA, thingB)) return;
   if (thingA.ground == thingB || thingB.ground == thingA) return;
   var minDistance = thingA.distanceSquaredTo(thingB);
   if (util.math.sqr(thingA.getOuterRadius() + thingB.getOuterRadius()) <

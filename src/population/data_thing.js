@@ -22,8 +22,8 @@ goog.inherits(DataThing, LeafThing);
 
 /**
  * @typedef {{
- *   coordinates: Array.<number>,
- *   normals: Array.<number>,
+ *   vertexCoordinates: Array.<number>,
+ *   normalCoordinates: Array.<number>,
  *   textureCoordinates: Array.<number>,
  *   type: string
  * }}
@@ -35,7 +35,7 @@ DataThing.positionBufferCache = {};
 DataThing.prototype.getPositionBuffer = function() {
   if (!DataThing.positionBufferCache[this.data.type]) {
     DataThing.positionBufferCache[this.data.type] =
-        Env.gl.generateBuffer(this.data.coordinates, 3);
+        Env.gl.generateBuffer(this.data.vertexCoordinates, 3);
   }
   return DataThing.positionBufferCache[this.data.type];
 };
@@ -45,7 +45,7 @@ DataThing.normalBufferCache = {};
 DataThing.prototype.getNormalBuffer = function() {
   if (!DataThing.normalBufferCache[this.data.type]) {
     DataThing.normalBufferCache[this.data.type] =
-        Env.gl.generateBuffer(this.data.normals, 3);
+        Env.gl.generateBuffer(this.data.normalCoordinates, 3);
   }
   return DataThing.normalBufferCache[this.data.type];
 };

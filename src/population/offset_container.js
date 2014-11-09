@@ -1,8 +1,9 @@
 goog.provide('OffsetContainer');
 goog.provide('OffsetBox');
 
-
+goog.require('Box');
 goog.require('Thing');
+
 
 /**
  * @constructor
@@ -16,6 +17,7 @@ OffsetContainer = function(message) {
   this.addPart(this.thing);
 };
 goog.inherits(OffsetContainer, Thing);
+
 
 /**
  * @constructor

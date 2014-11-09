@@ -10,7 +10,6 @@ FpsAnchor = function(){};
 
 
 /**
- * @param {quat} out
  * @return {quat}
  */
 FpsAnchor.prototype.getViewOrientation = util.unimplemented;

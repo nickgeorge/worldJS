@@ -72,7 +72,7 @@ Reader.prototype.checkIntCode = function(code, opt_name) {
 
 
 Reader.prototype.readThingMessage = function() {
-  var type = this.readInt32();
+  var type = this.readInt8();
 
   var constructor = Types.getConstructor(type);
 

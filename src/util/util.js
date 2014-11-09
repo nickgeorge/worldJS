@@ -390,9 +390,7 @@ util.array.forEach = function(arr, f, opt_ctx) {
   var l = arr.length;
   var arr2 = arr;
   for (var i = 0; i < l; i++) {
-    if (i in arr2) {
-      f.call(opt_ctx, arr2[i], i, arr);
-    }
+    f.call(opt_ctx, arr2[i], i, arr);
   }
 };
 
@@ -402,9 +400,7 @@ util.array.map = function(arr, f, opt_ctx) {
   var arr2 = arr;
   var out = [];
   for (var i = 0; i < l; i++) {
-    if (i in arr2) {
-      out.push(f.call(opt_ctx, arr2[i], i, arr))
-    }
+    out.push(f.call(opt_ctx, arr2[i], i, arr))
   }
   return out;
 };

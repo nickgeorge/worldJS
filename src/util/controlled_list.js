@@ -7,6 +7,8 @@ ControlledList = function() {
   this.elementsToRemove = [];
 };
 
+ControlledList.EMTPY_LIST = new ControlledList();
+
 
 ControlledList.prototype.get = function(i) {
   return this.elements[i];
@@ -51,11 +53,13 @@ ControlledList.prototype.update = function() {
  */
 ControlledList.prototype.forEachCross = function(
     otherList, f, opt_ctx) {
-  this.forEach(function(element) {
-    otherList.forEach(function(otherElement) {
+  for (var i = 0, len = this.size(); i < len; i++) {
+    var element = this.get(i);
+    for (var j = 0, otherLen = otherList.size(); j < otherLen; j++) {
+      var otherElement = otherList.get(j);
       f.call(opt_ctx, element, otherElement);
-    }, opt_ctx);
-  }, opt_ctx);
+    }
+  }
 };
 
 

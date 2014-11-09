@@ -13,7 +13,6 @@ FpsCamera = function(message) {
   this.anchor = null;
 
   this.objectCache = {
-    viewOrientation: quat.create(),
     conjugateViewOrientation: quat.create(),
     anchorPosition: vec3.create(),
     negatedAnchorPosition: vec3.create(),
@@ -24,7 +23,7 @@ FpsCamera = function(message) {
 FpsCamera.prototype.transform = function() {
   var cache = this.objectCache;
 
-  var viewOrientation = this.anchor.getViewOrientation(cache.viewOrientation)
+  var viewOrientation = this.anchor.getViewOrientation();
   var conjugateViewOrientation = quat.conjugate(
       cache.conjugateViewOrientation,
       viewOrientation);
@@ -42,4 +41,9 @@ FpsCamera.prototype.getPosition = function() {
 
 FpsCamera.prototype.setAnchor = function(anchor) {
   this.anchor = anchor;
+};
+
+
+FpsCamera.prototype.getAnchor = function() {
+  return this.anchor;
 };

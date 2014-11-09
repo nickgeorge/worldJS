@@ -38,7 +38,13 @@ World = function() {
 
 
 World.prototype.populate = function() {};
-World.prototype.onPauseChanged = function() {};
+
+
+/**
+ * @param {boolean} isPaused
+ */
+World.prototype.onPauseChanged = function(isPaused) {};
+
 
 
 World.prototype.setSortBeforeDrawing = function(sortBeforeDrawing) {
@@ -69,9 +75,8 @@ World.prototype.addThing = function(thing) {
 };
 
 
-World.prototype.removeThing = function(thing) {
+World.prototype.removeObject = function(thing) {
   this.removeDrawable(thing);
-  this.things.remove(thing);
   this.thingsById[thing.id] = null;
 
   var key = thing.getType();
@@ -79,6 +84,18 @@ World.prototype.removeThing = function(thing) {
     this.thingsByType[key] = new ControlledList();
   }
   this.thingsByType[key].remove(thing);
+};
+
+
+World.prototype.removeThing = function(thing) {
+  this.things.remove(thing);
+  this.removeObject(thing);
+};
+
+
+World.prototype.removeProjectile = function(thing) {
+  this.projectiles.remove(thing);
+  this.removeObject(thing);
 };
 
 
@@ -105,7 +122,7 @@ World.prototype.removeDrawable = function(drawable) {
 
 
 World.prototype.getThingsByType = function(type) {
-  return this.thingsByType[type];
+  return this.thingsByType[type] || ControlledList.EMTPY_LIST;
 };
 
 
@@ -149,17 +166,19 @@ World.prototype.draw = function() {
           thingA.distanceSquaredToCamera;
     });
 
-    util.array.forEach(this.opaque, function(opaqueDrawable) {
-      opaqueDrawable.draw();
-    });
 
-    util.array.forEach(this.transluscent, function(transluscentDrawable) {
-      transluscentDrawable.draw();
-    });
+    for (var i = 0; this.opaque[i]; i++) {
+      this.opaque[i].draw();
+    }
+    for (var i = 0; this.transluscent[i]; i++) {
+      this.transluscent[i].draw();
+    }
+
+
   } else {
-    this.drawables.forEach(function(drawable) {
-      drawable.draw();
-    });
+    for (var i = 0; this.drawables.get(i); i++) {
+      this.drawables.get(i).draw();
+    }
   }
 
   Env.gl.popViewMatrix();
@@ -241,15 +260,11 @@ World.prototype.setState = function(reader) {
   for (var i = 0; i < 3; i++) {
     reader.performAddRemove();
     var writablesCount = reader.readInt32();
-    // console.log('Count: ' + writablesCount);
     for (var j = 0; j < writablesCount; j++) {
       var id = reader.readInt32();
       var thing = reader.readThing().setId(id);
       if (thing.alive) this.addThing(thing);
     }
-    reader.checkSync();
-
-
     reader.checkSync();
   }
   this.stateSet = true;
@@ -271,9 +286,6 @@ World.prototype.updateWorld = function(reader) {
       else {
       }
     }
-    reader.checkSync();
-
-
     reader.checkSync();
   }
 };

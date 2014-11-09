@@ -20,7 +20,9 @@ MessageCode = {
   SYNC: 98,
   EOM: 99,
 
-  // Weird
+  // quantum only
+  MY_SCORE_IS: 51,
+
   LEFT_CLICK_EVENT: 101,
   RIGHT_CLICK_EVENT: 102,
 };
