@@ -1,7 +1,6 @@
 goog.provide('Sounds');
 
 Audio.prototype.maybePlay = function() {
-  // debugger;
   this.currentTime = 0;
   if (!Sounds.on) return;
   this.play();

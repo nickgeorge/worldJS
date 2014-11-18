@@ -90,21 +90,32 @@ Reader.prototype.readThing = function() {
   return new message.klass(message);
 };
 
-Reader.prototype.readVec3 = function() {
-  return [
-    this.readFloat32(),
-    this.readFloat32(),
-    this.readFloat32(),
-  ];
+/**
+ * @param  {vec3=} opt_out Vector to populate.
+ *     If null, creates a new vector.
+ * @return {vec3} The read in vector.
+ */
+Reader.prototype.readVec3 = function(opt_out) {
+  var out = opt_out || vec3.create();
+  out[0] = this.readFloat32();
+  out[1] = this.readFloat32();
+  out[2] = this.readFloat32();
+  return out;
 };
 
-Reader.prototype.readVec4 = function() {
-  return [
-    this.readFloat32(),
-    this.readFloat32(),
-    this.readFloat32(),
-    this.readFloat32(),
-  ];
+
+/**
+ * @param  {vec4=} opt_out Vector to populate.
+ *     If null, creates a new vector.
+ * @return {vec4} The read in vector.
+ */
+Reader.prototype.readVec4 = function(opt_out) {
+  var out = opt_out || vec4.create();
+  out[0] = this.readFloat32();
+  out[1] = this.readFloat32();
+  out[2] = this.readFloat32();
+  out[3] = this.readFloat32();
+  return out;
 };
 
 Reader.prototype.performAddRemove = function() {

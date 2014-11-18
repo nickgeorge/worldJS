@@ -328,9 +328,6 @@ Thing.prototype.findEncounter = function(p_0_pc, p_1_pc, threshold, opt_extraArg
 
   var closestEncounter = null;
   for (var i = 0; this.parts[i]; i++) {
-    if (opt_extraArgs) {
-      console.log(this.parts[i] == opt_extraArgs.exclude)
-    }
     if (opt_extraArgs && this.parts[i] == opt_extraArgs.exclude) continue;
     var encounter = this.parts[i].findEncounter(p_0, p_1, threshold, opt_extraArgs);
     if (!encounter) continue;

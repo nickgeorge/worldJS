@@ -31,6 +31,7 @@ Client.prototype.onMessage = function(message) {
   var code = reader.readInt8();
   switch(code) {
     case MessageCode.SET_STATE:
+      console.log("set");
       var serverTime = reader.readInt32();
       Env.world.setState(reader);
       Env.world.stateSet = true;
@@ -45,10 +46,11 @@ Client.prototype.onMessage = function(message) {
         checkEOM = false;
       }
       // updateRate.snapshot();
-      Env.world.draw();
+      // Env.world.draw();
       // var t1 = new Date().getTime();
       // console.log((t1 - t0) + " : " + message.data.byteLength);
       // t0 = t1;
+      Env.world.draw();
       break;
     case MessageCode.SCORE:
       Env.world.scoreMap = Messages.readScoreMessage(reader);

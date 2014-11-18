@@ -283,8 +283,6 @@ World.prototype.updateWorld = function(reader) {
       var message = reader.readThingMessage();
       var thing = this.getThing(id);
       if (thing) thing.update(message);
-      else {
-      }
     }
     reader.checkSync();
   }

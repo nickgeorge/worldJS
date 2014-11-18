@@ -106,8 +106,6 @@ CollisionManager.prototype.test = function(shapeLike, pointLike) {
 
   if (!collisionCondition) return;
 
-  // var threshold = collisionCondition.thresholdFunction(shapeLike, pointLike);
-  // var encounter = shapeLike.findThingEncounter(bullet, 0);
   collisionCondition.collisionFunction(shapeLike, pointLike);
 };
 
