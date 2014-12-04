@@ -1702,7 +1702,6 @@ mat4.frob = function (a) {};
  * @class Quaternion
  * @typedef {Array.<number>}
  */
-
 var quat = {};
 
 /**

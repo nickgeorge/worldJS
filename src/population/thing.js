@@ -1,12 +1,13 @@
 goog.provide('Thing');
-goog.provide('Thing.Message');
+goog.provide('Thing.Proto');
 goog.provide('Thing.VelocityType');
 
 goog.require('util');
+goog.require('Proto');
 
 
 /**
- * @param {Thing.Message} message
+ * @param {Object.<string, *>} message
  * @constructor
  * @struct
  * @suppress {missingProperties}
@@ -24,8 +25,9 @@ Thing = function(message) {
 
   this.velocityType = message.velocityType || Thing.defaultVelocityType;
 
-
+  /** @type {vec3} */
   this.position = vec3.nullableClone(message.position);
+
   this.velocity = vec3.nullableClone(message.velocity);
   this.acceleration = vec3.nullableClone(message.acceleration);
   this.lastPosition = vec3.clone(this.position);
@@ -78,12 +80,6 @@ Thing = function(message) {
 
 
 /**
- * @typedef {Object.<string, *>}
- */
-Thing.Message;
-
-
-/**
  * @enum
  */
 Thing.VelocityType = {
@@ -103,7 +99,7 @@ Thing.prototype.setId = function(id) {
 
 
 Thing.prototype.advance = function(dt) {
-  this.advanceBasics(dt);
+  // this.advanceBasics(dt);
 };
 
 
@@ -516,8 +512,14 @@ Thing.prototype.setColor = function(color) {
   });
 };
 
+
 Thing.prototype.getParts = function() {
   return this.parts;
+};
+
+
+Thing.prototype.setVisible = function(visible) {
+  this.visible = visible;
 };
 
 
@@ -533,4 +535,19 @@ Thing.prototype.glom = function(thing, point) {
     this.parent.glom(thing, point);
   }
 };
+
+
+/**
+ * @constructor
+ * @struct
+ * @extends {Proto}
+ */
+Thing.Proto = function() {
+  goog.base(this);
+  this.alive = this.addField(0, new ByteField());
+  this.position = this.addField(1, new Vec3Field());
+  this.velocity = this.addField(2, new Vec3Field());
+  this.upOrientation = this.addField(3, new QuatField());
+};
+goog.inherits(Thing.Proto, Proto);
 

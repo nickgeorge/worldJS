@@ -259,15 +259,19 @@ World.prototype.setBackgroundColor = function(color) {
 World.prototype.setState = function(reader) {
   for (var i = 0; i < 3; i++) {
     reader.performAddRemove();
-    var writablesCount = reader.readInt32();
+    var writablesCount = reader.readInt();
     for (var j = 0; j < writablesCount; j++) {
-      var id = reader.readInt32();
-      var thing = reader.readThing().setId(id);
+      var id = reader.readInt();
+      var type = reader.readByte();
+      var klass = Types.getConstructor(type);
+      console.log("set " + type + " : " + Hero.type);
+      var thing = klass.newFromReader(reader).setId(id);
       if (thing.alive) this.addThing(thing);
     }
     reader.checkSync();
   }
   this.stateSet = true;
+  this.updateLists();
 };
 
 
@@ -277,12 +281,17 @@ World.prototype.setState = function(reader) {
 World.prototype.updateWorld = function(reader) {
   for (var i = 0; i < 3; i++) {
     reader.performAddRemove();
-    var writablesCount = reader.readInt32();
+    var writablesCount = reader.readInt();
     for (var j = 0; j < writablesCount; j++) {
-      var id = reader.readInt32();
-      var message = reader.readThingMessage();
+      // var id = reader.readInt();
+      // var thing = this.getThing(id);
+      // var message = reader.readThingMessage();
+      // if (thing) thing.update(message);
+
+      var id = reader.readInt();
       var thing = this.getThing(id);
-      if (thing) thing.update(message);
+      var type = reader.readByte();
+      if (thing) thing.updateFromReader(reader);
     }
     reader.checkSync();
   }
@@ -290,4 +299,8 @@ World.prototype.updateWorld = function(reader) {
 
 World.prototype.getThing = function(id) {
   return this.thingsById[id];
+};
+
+World.prototype.hasThing = function(id) {
+  return !!(this.thingsById[id]);
 };

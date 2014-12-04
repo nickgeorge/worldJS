@@ -24,6 +24,7 @@ ScoreCard.prototype.render = function() {
     var value = Env.world.scoreMap[i][1];
     var playerInfo = Env.world.nameMap[id];
     var name = Env.world.nameMap[id].name;
+    if (!Env.world.getThing(playerInfo.unitId)) return;
 
     var color = playerInfo.unitId == -1 ?
         vec4.CYAN :

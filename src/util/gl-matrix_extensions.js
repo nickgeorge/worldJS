@@ -37,6 +37,10 @@ vec3.equals = function(a, b) {
       a[2] == b[2];
 };
 
+Float32Array.prototype.toString = function() {
+  return '[' + Array.prototype.join.call(this, ', ') + ']';
+};
+
 
 vec4.equals = function(a, b) {
   return a[0] == b[0] &&

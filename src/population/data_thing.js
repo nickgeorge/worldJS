@@ -14,6 +14,9 @@ DataThing = function(message) {
   /** @type {DataThing.Data} */
   this.data = message.data;
 
+  this.positionMultiplier = message.positionMultiplier ||
+      [1, 1, 1];
+
   this.finalize();
 
 };

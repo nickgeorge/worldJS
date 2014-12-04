@@ -10,6 +10,7 @@
     <fileset dir="/Library/WebServer/worldJS/src"><include name="*.js" /></fileset>
     <fileset dir="/Library/WebServer/worldJS/src/camera"><include name="*.js" /></fileset>
     <fileset dir="/Library/WebServer/worldJS/src/client"><include name="*.js" /></fileset>
+    <fileset dir="/Library/WebServer/worldJS/src/client/proto"><include name="*.js" /></fileset>
     <fileset dir="/Library/WebServer/worldJS/src/effects"><include name="*.js" /></fileset>
     <fileset dir="/Library/WebServer/worldJS/src/gl"><include name="*.js" /></fileset>
     <fileset dir="/Library/WebServer/worldJS/src/input"><include name="*.js" /></fileset>

@@ -17,6 +17,8 @@ Animator = function(world, hud, gl) {
   this.framerate = new Framerate();
   this.paused = false;
 
+  this.drawOnTick = true;
+
   this.boundTick = util.bind(this.tick, this);
 };
 Animator.instance_ = null;
@@ -32,6 +34,10 @@ Animator.initSingleton = function(world, hud, gl) {
 Animator.getInstance = function() {
   return Animator.instance_;
 }
+
+Animator.prototype.setDrawOnTick = function(drawOnTick) {
+  this.drawOnTick = drawOnTick;
+};
 
 Animator.prototype.start = function() {
   this.drawScene();
@@ -63,7 +69,7 @@ Animator.prototype.tick = function() {
     return;
   }
   this.advanceWorld();
-  this.drawScene();
+  if (this.drawOnTick) this.drawScene();
   this.hud.render();
 };
 

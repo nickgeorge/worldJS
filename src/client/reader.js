@@ -13,36 +13,35 @@ Reader = function(arrayBuffer) {
   this.view = new DataView(this.buffer);
 };
 
-Reader.prototype.readFloat32 = function() {
+Reader.prototype.readFloat = function() {
   var value = this.view.getFloat32(this.position);
   this.position += 4;
   return value;
 };
 
-Reader.prototype.readInt32 = function() {
+Reader.prototype.readInt = function() {
   var value = this.view.getInt32(this.position);
   this.position += 4;
   return value;
 };
 
-Reader.prototype.readInt16 = function() {
+Reader.prototype.readShort = function() {
   var value = this.view.getInt16(this.position);
   this.position += 2;
   return value;
 };
 
-Reader.prototype.readInt8 = function() {
+Reader.prototype.readByte = function() {
   var value = this.view.getInt8(this.position);
   this.position++;
   return value;
 };
 
 Reader.prototype.readString = function() {
-  var length = this.readInt32();
+  var length = this.readInt();
   var str = String.fromCharCode.apply(
       null, new Uint8Array(this.buffer, this.position, length));
   this.position += length;
-  console.log(str);
   return str;
 };
 
@@ -55,7 +54,7 @@ Reader.prototype.checkEOM = function() {
 };
 
 Reader.prototype.checkCode = function(code, opt_name) {
-  var actual = this.readInt8();
+  var actual = this.readByte();
   var name = opt_name || code;
   if (actual != code) {
     throw new Error("checkCode failled on " + name + '. Got ' + actual);
@@ -63,7 +62,7 @@ Reader.prototype.checkCode = function(code, opt_name) {
 };
 
 Reader.prototype.checkIntCode = function(code, opt_name) {
-  var actual = this.readInt32();
+  var actual = this.readInt();
   var name = opt_name || code;
   if (actual != code) {
     throw new Error("checkCode failled on " + name + '. Got ' + actual);
@@ -72,7 +71,7 @@ Reader.prototype.checkIntCode = function(code, opt_name) {
 
 
 Reader.prototype.readThingMessage = function() {
-  var type = this.readInt8();
+  var type = this.readByte();
 
   var constructor = Types.getConstructor(type);
 
@@ -97,9 +96,9 @@ Reader.prototype.readThing = function() {
  */
 Reader.prototype.readVec3 = function(opt_out) {
   var out = opt_out || vec3.create();
-  out[0] = this.readFloat32();
-  out[1] = this.readFloat32();
-  out[2] = this.readFloat32();
+  out[0] = this.readFloat();
+  out[1] = this.readFloat();
+  out[2] = this.readFloat();
   return out;
 };
 
@@ -111,27 +110,28 @@ Reader.prototype.readVec3 = function(opt_out) {
  */
 Reader.prototype.readVec4 = function(opt_out) {
   var out = opt_out || vec4.create();
-  out[0] = this.readFloat32();
-  out[1] = this.readFloat32();
-  out[2] = this.readFloat32();
-  out[3] = this.readFloat32();
+  out[0] = this.readFloat();
+  out[1] = this.readFloat();
+  out[2] = this.readFloat();
+  out[3] = this.readFloat();
   return out;
 };
 
 Reader.prototype.performAddRemove = function() {
-  var addListCount = this.readInt32();
+  var addListCount = this.readInt();
   for (var i = 0; i < addListCount; i++) {
-    var id = this.readInt32();
-    var thing = this.readThing().setId(id);
-    if (!Env.world.thingsById[id] && thing.alive) {
-      Env.world.addThing(thing);
-    }
+    var id = this.readInt();
+    var type = this.readByte();
+    var klass = Types.getConstructor(type);
+    var thing = klass.newFromReader(this).setId(id);
+    console.log(Env.world.hasThing(id));
+    if (!Env.world.hasThing(id) && thing.alive) Env.world.addThing(thing);
   }
   this.checkSync();
 
-  var removeListCount = this.readInt32();
+  var removeListCount = this.readInt();
   for (var i = 0; i < removeListCount; i++) {
-    var id = this.readInt32();
+    var id = this.readInt();
     var thing = Env.world.thingsById[id];
     if (Env.world.thingsById[id]) {
       Env.world.removeThing(thing);

@@ -8,9 +8,9 @@ Env = {
 };
 
 
-Env.setEnvironment = function(world, hud, gl, client) {
+Env.setEnvironment = function(world, hud, gl, opt_client) {
   Env.world = world;
   Env.hud = hud;
   Env.gl = gl;
-  Env.client = client;
+  Env.client = opt_client || null;
 };

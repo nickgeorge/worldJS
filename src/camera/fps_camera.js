@@ -41,6 +41,7 @@ FpsCamera.prototype.getPosition = function() {
 
 FpsCamera.prototype.setAnchor = function(anchor) {
   this.anchor = anchor;
+  this.anchor.setVisible(false);
 };
 
 

@@ -49,7 +49,6 @@ Box.prototype.getOuterRadius = function() {
       this.size[0],
       this.size[1],
       this.size[2]);
-// return 0;
 };
 
 

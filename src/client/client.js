@@ -2,6 +2,7 @@ goog.provide('Client');
 
 goog.require('Reader');
 goog.require('MessageCode');
+goog.require('Thing.Proto');
 
 /** @constructor */
 Client = function(world, port) {
@@ -21,6 +22,7 @@ Client = function(world, port) {
   }, this);
 };
 
+var raw;
 // var updateRate = new Framerate();
 // var t0 = 0;
 Client.prototype.onMessage = function(message) {
@@ -28,29 +30,22 @@ Client.prototype.onMessage = function(message) {
 
   var checkEOM = true;
 
-  var code = reader.readInt8();
+  var code = reader.readByte();
   switch(code) {
     case MessageCode.SET_STATE:
-      console.log("set");
-      var serverTime = reader.readInt32();
+      var serverTime = reader.readInt();
       Env.world.setState(reader);
-      Env.world.stateSet = true;
       break;
     case MessageCode.UPDATE_WORLD:
       var t = new Date().getTime();
-      var serverTime = reader.readInt32();
+      var serverTime = reader.readInt();
       // console.log(t % 5000 - serverTime);
       if (Env.world.stateSet) {
         Env.world.updateWorld(reader);
       } else {
         checkEOM = false;
       }
-      // updateRate.snapshot();
       // Env.world.draw();
-      // var t1 = new Date().getTime();
-      // console.log((t1 - t0) + " : " + message.data.byteLength);
-      // t0 = t1;
-      Env.world.draw();
       break;
     case MessageCode.SCORE:
       Env.world.scoreMap = Messages.readScoreMessage(reader);
@@ -59,14 +54,21 @@ Client.prototype.onMessage = function(message) {
       Env.world.nameMap = Messages.readNameMapMessage(reader);
       break;
     case MessageCode.YOU_ARE:
-      Env.world.hero = Env.world.getThing(reader.readInt32());
+      Env.world.hero = Env.world.getThing(reader.readInt());
+      Env.world.camera = new FpsCamera({});
+      Env.world.camera.setAnchor(Env.world.hero);
       break;
     case MessageCode.BROADCAST:
-      var id = reader.readInt32();
+      var id = reader.readInt();
       var messageText = reader.readString();
       var name = Env.world.nameMap[id].name;
       Env.hud.logger.log(name + ': ' + messageText);
       break;
+    case 101:
+      raw = reader;
+      var tm = new DumbCrate.Proto();
+      tm.read(reader)
+      console.log(tm);
     default:
       console.log('Unrecognized code: ' + code);
       checkEOM = false;
@@ -75,7 +77,9 @@ Client.prototype.onMessage = function(message) {
 };
 
 Client.prototype.send = function(msg) {
-  this.socket.send(msg)
+  try {
+    this.socket.send(msg);
+  } catch(e) {}
 };
 
 Client.prototype.sendCode = function(code) {

@@ -3,11 +3,11 @@ goog.provide('Messages');
 
 Messages.readNameMapMessage = function(reader) {
   var nameMap = {};
-  var nameMapSize = reader.readInt32();
+  var nameMapSize = reader.readInt();
   for (var i = 0; i < nameMapSize; i++) {
-    var id = reader.readInt32();
+    var id = reader.readInt();
     var name = reader.readString();
-    var unitId = reader.readInt32();
+    var unitId = reader.readInt();
     nameMap[id] = {
       name: name,
       unitId: unitId,
@@ -19,10 +19,10 @@ Messages.readNameMapMessage = function(reader) {
 
 Messages.readScoreMessage = function(reader) {
   var scoreMap = [];
-  var scoreMapSize = reader.readInt32();
+  var scoreMapSize = reader.readInt();
   for (var i = 0; i < scoreMapSize; i++) {
-    var id = reader.readInt32();
-    var score = reader.readInt32();
+    var id = reader.readInt();
+    var score = reader.readInt();
     scoreMap.push([id, score]);
   }
   return scoreMap;
