@@ -39,7 +39,7 @@ Client.prototype.onMessage = function(message) {
       var t = new Date().getTime();
       var serverTime = reader.readInt();
       var delta = t - t0;
-      if (delta > 19 || delta < 16) console.log(delta);
+      // if (delta > 19 || delta < 16) console.log(delta);
       t0 = t;
       if (Env.world.stateSet) {
         Env.world.updateWorld(reader);
