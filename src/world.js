@@ -77,12 +77,9 @@ World.prototype.addThing = function(thing) {
 
 World.prototype.removeObject = function(thing) {
   this.removeDrawable(thing);
-  this.thingsById[thing.id] = null;
+  // this.thingsById[thing.id] = null;
 
   var key = thing.getType();
-  if (!this.thingsByType[key]) {
-    this.thingsByType[key] = new ControlledList();
-  }
   this.thingsByType[key].remove(thing);
 };
 
@@ -291,7 +288,13 @@ World.prototype.updateWorld = function(reader) {
       var id = reader.readInt();
       var thing = this.getThing(id);
       var type = reader.readByte();
-      if (thing) thing.updateFromReader(reader);
+      if (thing) {
+        thing.updateFromReader(reader);
+      } else {
+        // Super hacky: consume proto
+        var klass = Types.getConstructor(type);
+        klass.newFromReader(reader);
+      }
     }
     reader.checkSync();
   }

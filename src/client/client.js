@@ -23,8 +23,7 @@ Client = function(world, port) {
 };
 
 var raw;
-// var updateRate = new Framerate();
-// var t0 = 0;
+var t0 = 0;
 Client.prototype.onMessage = function(message) {
   var reader = new Reader(message.data);
 
@@ -39,13 +38,15 @@ Client.prototype.onMessage = function(message) {
     case MessageCode.UPDATE_WORLD:
       var t = new Date().getTime();
       var serverTime = reader.readInt();
-      // console.log(t % 5000 - serverTime);
+      var delta = t - t0;
+      if (delta > 19 || delta < 16) console.log(delta);
+      t0 = t;
       if (Env.world.stateSet) {
         Env.world.updateWorld(reader);
       } else {
         checkEOM = false;
       }
-      // Env.world.draw();
+      Env.world.draw();
       break;
     case MessageCode.SCORE:
       Env.world.scoreMap = Messages.readScoreMessage(reader);

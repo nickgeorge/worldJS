@@ -5,7 +5,6 @@ goog.provide('Framerate');
 Framerate = function() {
   this.lastTime = 0;
   this.numFramerates = 30;
-  this.averageUpdateInterval = 500;
 
   this.renderTime = -1;
   this.framerates = [];

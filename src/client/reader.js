@@ -124,7 +124,6 @@ Reader.prototype.performAddRemove = function() {
     var type = this.readByte();
     var klass = Types.getConstructor(type);
     var thing = klass.newFromReader(this).setId(id);
-    console.log(Env.world.hasThing(id));
     if (!Env.world.hasThing(id) && thing.alive) Env.world.addThing(thing);
   }
   this.checkSync();
