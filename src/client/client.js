@@ -65,11 +65,11 @@ Client.prototype.onMessage = function(message) {
       var name = Env.world.nameMap[id].name;
       Env.hud.logger.log(name + ': ' + messageText);
       break;
-    case 101:
-      raw = reader;
-      var tm = new DumbCrate.Proto();
-      tm.read(reader)
-      console.log(tm);
+    // case 101:
+    //   raw = reader;
+    //   // var tm = new DumbCrate.Proto();
+    //   tm.read(reader)
+    //   console.log(tm);
     default:
       console.log('Unrecognized code: ' + code);
       checkEOM = false;

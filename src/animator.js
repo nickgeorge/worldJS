@@ -61,7 +61,6 @@ Animator.prototype.isPaused = function() {
   return this.paused;
 };
 
-
 Animator.prototype.tick = function() {
   window.requestAnimationFrame(this.boundTick);
   if (this.paused) {

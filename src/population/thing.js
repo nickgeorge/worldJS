@@ -99,7 +99,7 @@ Thing.prototype.setId = function(id) {
 
 
 Thing.prototype.advance = function(dt) {
-  // this.advanceBasics(dt);
+  this.advanceBasics(dt);
 };
 
 

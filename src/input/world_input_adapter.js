@@ -1,8 +1,14 @@
 goog.provide('WorldInputAdapter');
 goog.require('Animator');
 
-/** @constructor @struct */
-WorldInputAdapter = function() {
+/**
+ * @param {!Object=} opt_scope
+ * @constructor
+ * @struct
+ */
+WorldInputAdapter = function(opt_scope) {
+  this.scope = opt_scope || null;
+
   this.onMouseMove = util.fn.noOp;
   this.onKey = util.fn.noOp;
   this.onMouseButton = util.fn.noOp;
@@ -27,26 +33,42 @@ WorldInputAdapter.prototype.isPointerLocked = function() {
 };
 
 
+/**
+ * @param {Function} handler
+ * @param {Object=} opt_context
+ */
 WorldInputAdapter.prototype.setKeyHandler = function(handler, opt_context) {
-  this.onKey = util.bind(handler, opt_context);
+  this.onKey = util.bind(handler, opt_context || this.scope);
   return this;
 };
 
 
+/**
+ * @param {Function} handler
+ * @param {Object=} opt_context
+ */
 WorldInputAdapter.prototype.setMouseButtonHandler = function(handler, opt_context) {
-  this.onMouseButton = util.bind(handler, opt_context);
+  this.onMouseButton = util.bind(handler, opt_context || this.scope);
   return this;
 };
 
 
+/**
+ * @param {Function} handler
+ * @param {Object=} opt_context
+ */
 WorldInputAdapter.prototype.setMouseMoveHandler = function(handler, opt_context) {
-  this.onMouseMove = util.bind(handler, opt_context);
+  this.onMouseMove = util.bind(handler, opt_context || this.scope);
   return this;
 };
 
 
+/**
+ * @param {Function} handler
+ * @param {Object=} opt_context
+ */
 WorldInputAdapter.prototype.setPointerLockChangeHandler = function(handler, opt_context) {
-  this.onPointerLockChange = util.bind(handler, opt_context);
+  this.onPointerLockChange = util.bind(handler, opt_context || this.scope);
   return this;
 };
 

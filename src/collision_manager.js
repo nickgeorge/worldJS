@@ -18,15 +18,9 @@ CollisionManager = function(world) {
   // this.binOverlap =
 
   this.filtered = [];
-
-  this.registerCollisionConditions();
 };
 
-
-CollisionManager.prototype.registerCollisionConditions = util.unimplemented;
-
-
-CollisionManager.prototype.registerCollisionCondition = function(
+CollisionManager.prototype.rIiegisterCollisionCondition = function(
     classA, classB, thresholdFunction, collisionFunction) {
   var typeA = classA.type;
   var typeB = classB.type;

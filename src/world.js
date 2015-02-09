@@ -10,7 +10,7 @@ goog.require('Env');
 World = function() {
   this.lights = [];
   this.camera = null;
-  this.collisionManager = null;
+  this.collisionManager = new CollisionManager(this);
 
   this.age = 0;
 
@@ -59,6 +59,11 @@ World.prototype.setCollisionManager = function(collisionManager) {
 
 World.prototype.getCamera = function() {
   return this.camera;
+};
+
+
+World.prototype.setCamera = function(camera) {
+  this.camera = camera;
 };
 
 
@@ -261,7 +266,6 @@ World.prototype.setState = function(reader) {
       var id = reader.readInt();
       var type = reader.readByte();
       var klass = Types.getConstructor(type);
-      console.log("set " + type + " : " + Hero.type);
       var thing = klass.newFromReader(reader).setId(id);
       if (thing.alive) this.addThing(thing);
     }
@@ -305,5 +309,11 @@ World.prototype.getThing = function(id) {
 };
 
 World.prototype.hasThing = function(id) {
-  return !!(this.thingsById[id]);
+  return Boolean(this.thingsById[id]);
+};
+
+World.prototype.registerCollisionCondition = function(
+    classA, classB, thresholdFunction, collisionFunction) {
+  this.collisionManager.registerCollisionCondition(
+    classA, classB, thresholdFunction, collisionFunction);
 };
