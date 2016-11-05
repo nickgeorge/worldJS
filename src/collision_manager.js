@@ -20,7 +20,7 @@ CollisionManager = function(world) {
   this.filtered = [];
 };
 
-CollisionManager.prototype.rIiegisterCollisionCondition = function(
+CollisionManager.prototype.registerCollisionCondition = function(
     classA, classB, thresholdFunction, collisionFunction) {
   var typeA = classA.type;
   var typeB = classB.type;

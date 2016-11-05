@@ -50,6 +50,7 @@ Thing = function(message) {
   }
 
   this.alive = !(message.alive === false || message.alive === 0);
+
   this.age = 0;
   this.damageMultiplier = message.damageMultiplier || 1;
   this.visible = !(message.visible === false || message.visible === 0);
@@ -400,9 +401,7 @@ Thing.prototype.dispose = function() {
 
 Thing.prototype.setParent = function(parent) {
   this.parent = parent;
-  // console.log(this.parent.scale);
   // vec3.multiply(this.scale, this.scale, this.parent.scale);
-  // console.log(this.scale);
 };
 
 
@@ -502,6 +501,7 @@ Thing.prototype.eachEffect = function(fn) {
 
 Thing.prototype.setColor = function(color) {
   this.color = color;
+  this.transluscent = this.color[3] < 1;
   this.eachPartRecursive(function(part) {
     part.color = color;
   });
@@ -529,6 +529,18 @@ Thing.prototype.glom = function(thing, point) {
     this.localToParentCoords(point, point);
     this.parent.glom(thing, point);
   }
+};
+
+/**
+ * @param {Thing.Proto} proto
+ */
+Thing.prototype.updateFromProto = function(proto) {
+  if (proto.alive.isSet()) {
+    this.alive = proto.alive.get();
+  }
+  proto.position.copyIfSet(this.position);
+  proto.velocity.copyIfSet(this.velocity);
+  proto.upOrientation.copyIfSet(this.upOrientation);
 };
 
 

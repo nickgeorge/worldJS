@@ -6,7 +6,7 @@ goog.require('util');
  * @constructor
  * @struct
  */
-var Proto = function() {
+Proto = function() {
   this.fields = {}
 };
 
@@ -15,6 +15,7 @@ Proto.EOM = 127;
 
 
 Proto.prototype.read = function(reader) {
+  this.markFieldsUnset();
   while (true) {
     var index = reader.readByte();
     if (index == Proto.EOM) return;
@@ -31,4 +32,12 @@ Proto.prototype.read = function(reader) {
 Proto.prototype.addField = function(index, field) {
   this.fields[index] = field;
   return field;
+};
+
+
+Proto.prototype.markFieldsUnset = function() {
+  util.object.forEach(this.fields, function(field) {
+    field.markUnset();
+  });
+  return this;
 };

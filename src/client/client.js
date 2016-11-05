@@ -55,7 +55,8 @@ Client.prototype.onMessage = function(message) {
       Env.world.nameMap = Messages.readNameMapMessage(reader);
       break;
     case MessageCode.YOU_ARE:
-      Env.world.hero = Env.world.getThing(reader.readInt());
+      var id = reader.readInt();
+      Env.world.hero = Env.world.getThing(id);
       Env.world.camera = new FpsCamera({});
       Env.world.camera.setAnchor(Env.world.hero);
       break;

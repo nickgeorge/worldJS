@@ -68,11 +68,13 @@ for face in faces:
 
 output_file = args.output_file
 
+output_file.write('goog.provide(\'%s\');' % name);
+output_file.write('\n');
 output_file.write('%s = {\n' % name)
 output_file.write('  type: \'%s\',\n' % name)
-output_file.write('  coordinates: %s,\n' % coordinates)
+output_file.write('  vertexCoordinates: %s,\n' % coordinates)
 output_file.write('  textureCoordinates: %s,\n' % textureCoordinates)
-output_file.write('  normals: %s,\n' % normals)
+output_file.write('  normalCoordinates: %s,\n' % normals)
 output_file.write('}')
 output_file.close()
 

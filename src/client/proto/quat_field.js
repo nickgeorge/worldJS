@@ -28,3 +28,15 @@ QuatField.prototype.getInitial = function() {
   return quat.create();
 };
 
+
+/**
+ * Copies the value of this field into a target proto,
+ * iff the field is marked set.
+ * @param  {quat} target
+ */
+QuatField.prototype.copyIfSet = function(target) {
+  if (this.isSet()) {
+    quat.copy(target, this.get());
+  }
+};
+

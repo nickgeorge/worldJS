@@ -24,7 +24,7 @@ Field.prototype.isSet = function() {
 };
 
 
-Field.prototype.reset = function() {
+Field.prototype.markUnset = function() {
   this.valueSet = false;
 };
 

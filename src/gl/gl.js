@@ -78,7 +78,7 @@ GL.prototype.reset = function(backgroundColor) {
   this.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
   mat4.perspective(this.perspectiveMatrix,
       Math.PI/4, this.viewportWidth/this.viewportHeight,
-      .1, 400.0);
+      .1, 10000.0);
 
   this.enable(GL.DEPTH_TEST);
   this.enable(GL.BLEND)

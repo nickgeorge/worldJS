@@ -19,6 +19,7 @@ Sounds = {
   },
 
   getAndPlay: function(sound, opt_callback) {
+    // console.log("getabd");
     var audio = Sounds.get(sound, opt_callback);
 
     audio.addEventListener('canplaythrough', function() {

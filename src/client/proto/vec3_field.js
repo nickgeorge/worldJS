@@ -27,3 +27,15 @@ Vec3Field.prototype.read = function(reader) {
 Vec3Field.prototype.getInitial = function() {
   return vec3.create();
 };
+
+
+/**
+ * Copies the value of this field into a target proto,
+ * iff the field is marked set.
+ * @param  {vec3} target
+ */
+Vec3Field.prototype.copyIfSet = function(target) {
+  if (this.isSet()) {
+    vec3.copy(target, this.get());
+  }
+};

@@ -85,7 +85,7 @@ World.prototype.removeObject = function(thing) {
   // this.thingsById[thing.id] = null;
 
   var key = thing.getType();
-  this.thingsByType[key].remove(thing);
+  this.getThingsByType(key).remove(thing);
 };
 
 
@@ -259,18 +259,16 @@ World.prototype.setBackgroundColor = function(color) {
  * @param {Reader} reader
  */
 World.prototype.setState = function(reader) {
-  for (var i = 0; i < 3; i++) {
-    reader.performAddRemove();
-    var writablesCount = reader.readInt();
-    for (var j = 0; j < writablesCount; j++) {
-      var id = reader.readInt();
-      var type = reader.readByte();
-      var klass = Types.getConstructor(type);
-      var thing = klass.newFromReader(reader).setId(id);
-      if (thing.alive) this.addThing(thing);
-    }
-    reader.checkSync();
+  reader.performAddRemove();
+  var writablesCount = reader.readInt();
+  for (var j = 0; j < writablesCount; j++) {
+    var id = reader.readInt();
+    var type = reader.readByte();
+    var klass = Types.getConstructor(type);
+    var thing = klass.newFromReader(reader).setId(id);
+    if (thing.alive) this.addThing(thing);
   }
+  reader.checkSync();
   this.stateSet = true;
   this.updateLists();
 };
@@ -280,28 +278,21 @@ World.prototype.setState = function(reader) {
  * @param {Reader} reader
  */
 World.prototype.updateWorld = function(reader) {
-  for (var i = 0; i < 3; i++) {
-    reader.performAddRemove();
-    var writablesCount = reader.readInt();
-    for (var j = 0; j < writablesCount; j++) {
-      // var id = reader.readInt();
-      // var thing = this.getThing(id);
-      // var message = reader.readThingMessage();
-      // if (thing) thing.update(message);
-
-      var id = reader.readInt();
-      var thing = this.getThing(id);
-      var type = reader.readByte();
-      if (thing) {
-        thing.updateFromReader(reader);
-      } else {
-        // Super hacky: consume proto
-        var klass = Types.getConstructor(type);
-        klass.newFromReader(reader);
-      }
+  reader.performAddRemove();
+  var writablesCount = reader.readInt();
+  for (var j = 0; j < writablesCount; j++) {
+    var id = reader.readInt();
+    var thing = this.getThing(id);
+    var type = reader.readByte();
+    if (thing) {
+      thing.updateFromReader(reader);
+    } else {
+      // Super hacky: consume proto
+      var klass = Types.getConstructor(type);
+      klass.newFromReader(reader);
     }
-    reader.checkSync();
   }
+  reader.checkSync();
 };
 
 World.prototype.getThing = function(id) {

@@ -13,7 +13,7 @@ goog.inherits(ScoreCard, Widget);
 
 
 ScoreCard.prototype.render = function() {
-  this.setFont('bold 28px courier');
+  this.setFont('bold 14px courier');
 
   Env.world.scoreMap.sort(function(a, b) {
     return a[2] < b[2];
@@ -35,7 +35,7 @@ ScoreCard.prototype.render = function() {
         Math.floor(color[1] * 256) + ',' +
         Math.floor(color[2] * 256) + ')');
     this.context.fillText(name + " : " + value,
-        this.position[0], this.position[1] + i*25);
+        this.position[0], this.position[1] + i*12);
   }
 };
 
