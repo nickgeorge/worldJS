@@ -81,6 +81,19 @@ goog.provide('util');
 
 util = {};
 
+util.getCgiParams = function() {
+  var vars = {};
+  var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+      function(m,key,value) {
+        vars[key] = value;
+      });
+  return vars;
+}
+
+util.getCgiParam = function(param) {
+  return util.getCgiParams()[param];
+}
+
 util.degToRad = function(degrees) {
   return degrees * Math.PI / 180;
 };

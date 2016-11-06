@@ -58,6 +58,7 @@ Pane.prototype.snapIn = function(thing) {
     }
   }
   this.localToWorldCoords(thing.position, p_lc);
+  thing.saveLastPosition();
 };
 
 

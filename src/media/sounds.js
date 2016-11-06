@@ -6,6 +6,11 @@ Audio.prototype.maybePlay = function() {
   this.play();
 };
 
+Audio.prototype.maybeResume = function() {
+  if (!Sounds.on) return;
+  this.play();
+};
+
 Sounds = {
   on: true,
 

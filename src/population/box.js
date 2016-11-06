@@ -160,12 +160,14 @@ Box.prototype.getNormalBuffer = function() {
 Box.prototype.buildPanes = function() {
   var invertValue = this.invert ? -1 : 1;
   this.frontFace = new Pane({
+    name: "front face",
     size: [this.size[0], this.size[1], 0],
     position: [0, 0, this.size[2]/2 * invertValue],
     drawable: false,
     glommable: false,
   });
   this.backFace = new Pane({
+    name: "back face",
     size: [this.size[0], this.size[1], 0],
     position: [0, 0, -this.size[2]/2 * invertValue],
     drawable: false,
@@ -173,6 +175,7 @@ Box.prototype.buildPanes = function() {
     yaw: Math.PI,
   });
   this.rightFace = new Pane({
+    name: "right face",
     size: [this.size[2], this.size[1], 0],
     position: [this.size[0]/2 * invertValue, 0, 0],
     drawable: false,
@@ -180,6 +183,7 @@ Box.prototype.buildPanes = function() {
     yaw: Math.PI/2,
   });
   this.leftFace = new Pane({
+    name: "left face",
     size: [this.size[2], this.size[1], 0],
     position: [-this.size[0]/2 * invertValue, 0, 0],
     drawable: false,
@@ -187,6 +191,7 @@ Box.prototype.buildPanes = function() {
     yaw: 3*Math.PI/2,
   });
   this.topFace = new Pane({
+    name: "top face",
     size: [this.size[0], this.size[2], 0],
     position: [0, this.size[1]/2 * invertValue, 0],
     drawable: false,
@@ -194,6 +199,7 @@ Box.prototype.buildPanes = function() {
     pitch: 3*Math.PI/2,
   });
   this.bottomFace = new Pane({
+    name: "bottom face",
     size: [this.size[0], this.size[2], 0],
     position: [0, -this.size[1]/2 * invertValue, 0],
     drawable: false,

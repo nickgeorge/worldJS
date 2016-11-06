@@ -17,6 +17,10 @@ DataThing = function(message) {
   this.positionMultiplier = message.positionMultiplier ||
       [1, 1, 1];
 
+  message.refObject.glommable = false;
+  message.refObject.visible = false;
+  this.addPart(message.refObject);
+
   this.finalize();
 
 };

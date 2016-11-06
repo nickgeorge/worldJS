@@ -12,10 +12,12 @@ Textures = {
     return Textures.byPath_[src];
   },
 
-  initTextures: function(textureMap) {
+  initTextures: function(textureMap, opt_callback) {
+    var promises = [];
     for (var key in textureMap) {
-      Textures.initTexture(textureMap[key]);
+      promises.push(Textures.initTexture(textureMap[key]));
     }
+    return Promise.all(promises);
   },
 
   initTexture: function(src) {
@@ -23,11 +25,13 @@ Textures = {
     Textures.byPath_[src] = texture;
     texture.image = new Image();
     texture.loaded = false;
-    texture.image.onload = function() {
-      Textures.packageTexture_(texture);
-    }
-    texture.image.src = src;
-    return texture;
+    return new Promise(function(resolve, reject) {
+      texture.image.onload = function() {
+        Textures.packageTexture_(texture);
+        resolve(null);
+      }
+      texture.image.src = src;
+    });
   },
 
   /** @private */

@@ -33,6 +33,8 @@ Thing = function(message) {
   this.lastPosition = vec3.clone(this.position);
   this.color = message.color || vec4.fromValues(1, 1, 1, 1);
 
+  this.glomOverride = null;
+
 
   this.scale = message.uScale ?
       vec3.fromValues(message.uScale,
